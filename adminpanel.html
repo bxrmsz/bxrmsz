@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Panel | SMM</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --primary-light: #eef4ff;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-grey: #475569;
+            --border-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient: linear-gradient(135deg, #0066ff, #3b82f6);
+            --telegram: #0088cc;
+            --youtube: #ff0000;
+        }
+
+        body { 
+            background: var(--bg-body); 
+            color: var(--text-dark); 
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e6edf4 100%);
+        }
+        
+        .login-card {
+            background: var(--bg-card);
+            max-width: 380px;
+            width: 100%;
+            padding: 40px 32px;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-light);
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            margin: 0 auto 16px;
+            display: block;
+            border: 2px solid var(--primary);
+            padding: 4px;
+            background: white;
+            object-fit: cover;
+        }
+        
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        
+        .login-sub {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-grey);
+            margin-bottom: 28px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+        
+        .login-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 24px;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .login-btn:hover { opacity: 0.92; }
+        .hidden { display: none !important; }
+
+        /* Admin Header */
+        .admin-header {
+            background: var(--bg-card);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-header h3 { 
+            font-size: 20px; 
+            font-weight: 800; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        
+        .logout-btn {
+            background: #fef2f2;
+            color: var(--danger);
+            border: 1px solid #fee2e2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #fee2e2;
+            transform: translateY(-1px);
+        }
+
+        /* NAVIGATION 3 LINES */
+        .nav-grid {
+            background: var(--bg-card);
+            position: sticky;
+            top: 72px;
+            z-index: 999;
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 20px;
+        }
+        
+        .nav-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .nav-btn-modern {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-grey);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        
+        .nav-btn-modern i {
+            font-size: 14px;
+        }
+        
+        .nav-btn-modern:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn-modern.active {
+            background: var(--gradient);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,102,255,0.3);
+        }
+        
+        .nav-btn-modern.active i {
+            color: white;
+        }
+
+        /* Content */
+        .content-container { 
+            padding: 28px 24px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        .section { 
+            display: none; 
+            animation: fadeIn 0.3s ease; 
+        }
+        
+        .active-sec { 
+            display: block; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(8px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Cards */
+        .card { 
+            background: var(--bg-card); 
+            padding: 28px; 
+            border-radius: 28px; 
+            margin-bottom: 24px; 
+            border: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            margin-bottom: 28px; 
+        }
+        
+        .stat-box { 
+            background: linear-gradient(135deg, var(--bg-card) 0%, #fefefe 100%);
+            padding: 24px 16px; 
+            border-radius: 28px; 
+            text-align: center; 
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+        
+        .stat-box h2 { 
+            font-size: 36px; 
+            font-weight: 800; 
+            color: var(--primary); 
+        }
+        
+        .stat-box p { 
+            font-size: 13px; 
+            color: var(--text-grey); 
+            font-weight: 500; 
+            margin-top: 8px; 
+        }
+
+        /* Forms */
+        .form-label { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: var(--text-grey); 
+            display: block; 
+            margin-bottom: 6px; 
+        }
+        
+        .form-inp { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 1.5px solid var(--border-light); 
+            border-radius: 20px; 
+            margin-bottom: 14px; 
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .form-inp:focus { 
+            border-color: var(--primary); 
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,102,255,0.08);
+        }
+        
+        .btn-save { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--gradient); 
+            color: white; 
+            border: none; 
+            border-radius: 28px; 
+            font-weight: 700; 
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 14px;
+        }
+        
+        .btn-save:hover { opacity: 0.92; }
+        
+        .settings-group {
+            background: #fafcff;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .settings-group h5 {
+            font-size: 15px;
+            color: var(--primary);
+            margin-bottom: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h4 { 
+            font-size: 18px; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .user-item:last-child { border-bottom: none; }
+        
+        .u-info h4 { 
+            font-size: 15px; 
+            font-weight: 600; 
+            margin-bottom: 4px; 
+        }
+        
+        .u-info p { 
+            font-size: 12px; 
+            color: var(--text-grey); 
+        }
+        
+        .u-bal { 
+            font-weight: 800; 
+            color: var(--success); 
+            background: #e0f2e9; 
+            padding: 5px 14px; 
+            border-radius: 40px; 
+            font-size: 13px; 
+        }
+        
+        .u-edit { 
+            background: var(--primary-light); 
+            border: none; 
+            font-size: 14px; 
+            color: var(--primary); 
+            cursor: pointer; 
+            padding: 8px 12px;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+        
+        .u-edit:hover { background: var(--primary); color: white; }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 30px;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        
+        .search-input:focus { outline: none; border-color: var(--primary); }
+        
+        /* ========== SERVICES SECTION ========== */
+        .services-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .category-block {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+        
+        .category-header {
+            background: #fafcff;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .category-header i {
+            font-size: 20px;
+            color: var(--primary);
+            background: var(--primary-light);
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+        }
+        
+        .category-header span {
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: var(--text-dark);
+        }
+        
+        .service-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.15s;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .service-row:last-child {
+            border-bottom: none;
+        }
+        
+        .service-row:hover {
+            background: #fefefe;
+        }
+        
+        .service-info {
+            flex: 3;
+            min-width: 180px;
+        }
+        
+        .service-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .service-id-badge {
+            background: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            font-family: monospace;
+        }
+        
+        .service-desc {
+            font-size: 12px;
+            color: var(--text-grey);
+            line-height: 1.4;
+            display: block;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        
+        .service-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .price-tag {
+            background: #eef2ff;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-service-edit, .btn-service-del {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 32px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-service-edit {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-service-edit:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .btn-service-del {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-service-del:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+        
+        .empty-services {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-grey);
+            background: #fafcff;
+            border-radius: 28px;
+            border: 1px dashed var(--border-light);
+        }
+        
+        /* Order clean items */
+        .order-clean-item {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+        
+        .order-clean-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .order-id-badge {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 5px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .order-amount-badge {
+            font-weight: 800;
+            color: var(--success);
+            background: #e0f2e9;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .order-link-text {
+            font-size: 12px;
+            color: var(--text-grey);
+            word-break: break-all;
+            margin: 10px 0;
+            background: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            font-family: monospace;
+        }
+        
+        .order-date-text {
+            font-size: 11px;
+            color: var(--text-grey);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-grey);
+            font-size: 14px;
+            background: #fafcff;
+            border-radius: 24px;
+            border: 1px dashed var(--border-light);
+        }
+        
+        /* Admin creation styles */
+        .create-admin-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed var(--border-light);
+        }
+        
+        .create-admin-section h4 {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .create-admin-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .create-admin-btn:hover { opacity: 0.9; }
+
+        /* Developer buttons */
+        .dev-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        
+        .dev-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .dev-btn i {
+            font-size: 18px;
+        }
+        
+        .dev-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .dev-btn.telegram {
+            background: var(--telegram);
+        }
+        
+        .dev-btn.telegram:hover {
+            background: #0077b3;
+        }
+        
+        .dev-btn.provider {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .dev-btn.provider:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+        
+        .dev-btn.youtube {
+            background: var(--youtube);
+        }
+        
+        .dev-btn.youtube:hover {
+            background: #cc0000;
+        }
+
+        /* Credit Footer */
+        .credit-footer {
+            text-align: center;
+            padding: 20px 0 8px;
+            font-size: 12px;
+            color: var(--text-grey);
+            border-top: 1px solid var(--border-light);
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .credit-footer span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        @media (max-width: 640px) {
+            .nav-row {
+                gap: 8px;
+            }
+            .nav-btn-modern {
+                min-width: 80px;
+                padding: 10px 12px;
+                font-size: 11px;
+            }
+            .content-container {
+                padding: 20px 16px;
+            }
+            .card {
+                padding: 20px;
+            }
+            .service-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .service-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    
+        /* BXRMSZ premium admin theme */
+        :root { --primary:#8b7cff; --primary-dark:#6d5ce7; --primary-light:#242143; --bg-body:#091322; --bg-card:#121e33; --text-dark:#edf2ff; --text-grey:#aab6ce; --border-light:#2a3a57; --gradient:linear-gradient(135deg,#7c6cff,#3f83ee); }
+        body { background:radial-gradient(ellipse at top left,#17294a 0%,#0b1424 50%,#080f1b 100%) !important;color:#edf2ff !important; }
+        .login-container { background:transparent !important; }
+        .login-card,.admin-header,.nav-grid,.card,.stat-box,.user-item,.order-card,.payment-card { background:#121e33 !important;color:#edf2ff !important;border-color:#2a3a57 !important;box-shadow:0 16px 42px rgba(0,0,0,.2) !important; }
+        .admin-header,.nav-grid { backdrop-filter:blur(18px); }
+        .login-input,.search-input,.form-inp,textarea { background:#0b1628 !important;color:#edf2ff !important;border-color:#344663 !important; }
+        .login-title,.admin-header h3,.card h4,.stat-box h2,.user-item h4 { color:#edf2ff !important; }
+        .login-sub,.user-item p,.stat-box p { color:#aab6ce !important; }
+        .nav-btn-modern { background:#172842 !important;color:#bac7dd !important;border-color:#304361 !important; } .nav-btn-modern.active { background:linear-gradient(135deg,#7c6cff,#3f83ee) !important;color:#fff !important; }
+        .btn-save,.login-btn { background:linear-gradient(135deg,#7c6cff,#3f83ee) !important;color:#fff !important; }
+        .wallet-repair-row { display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:13px;margin:12px 0 16px;border:1px solid #344767;border-radius:14px;background:#101c30; } .wallet-repair-row div { display:flex;flex-direction:column;gap:4px; } .wallet-repair-row b { color:#e8efff;font-size:13px; } .wallet-repair-row small { color:#9eacc4;font-size:11px; }
+        .support-count { display:inline-block;min-width:20px;margin-left:5px;padding:2px 6px;border-radius:20px;background:#dbeafe;color:#1d4ed8;font-size:10px; }
+        .support-admin-layout { display:grid;grid-template-columns:minmax(230px,.8fr) minmax(0,1.4fr);gap:14px;align-items:start; }
+        .support-ticket-list { display:flex;flex-direction:column;gap:8px;max-height:650px;overflow:auto; }
+        .support-ticket-item { width:100%;text-align:left;padding:13px;border:1px solid #2c3d5a;border-radius:14px;background:#0e1a2d;color:#eaf1ff;cursor:pointer;display:flex;flex-direction:column;gap:6px; } .support-ticket-item.active { border-color:#8b7cff;background:#1b2542; }
+        .support-ticket-top { display:flex;justify-content:space-between;gap:8px;align-items:center; } .support-ticket-top b { font-size:13px; } .support-ticket-item small,.support-ticket-item time { color:#9eacc4;font-size:10px; } .support-ticket-preview { color:#bdc9dd;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+        .support-status { font-style:normal;font-size:9px;font-weight:800;padding:4px 7px;border-radius:20px;background:#1c3651;color:#9fd7ff; } .support-status.open { background:#3b2d14;color:#ffd88a; } .support-status.closed { background:#273346;color:#a8b4c7; }
+        .support-conversation { border:1px solid #2c3d5a;border-radius:16px;overflow:hidden;background:#0b1729;min-width:0; } .support-conversation-head { padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#15243b;border-bottom:1px solid #2c3d5a; } .support-conversation-head div { display:flex;flex-direction:column;gap:4px;min-width:0; } .support-conversation-head b { color:#edf2ff;font-size:14px; } .support-conversation-head small { color:#9eacc4;font-size:10px;overflow-wrap:anywhere; } .support-close-btn { border:1px solid #4b5d78;background:#24344d;color:#eaf1ff;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:800; }
+        .support-messages-list { min-height:240px;max-height:430px;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px; } .support-message { max-width:88%;padding:10px 12px;border-radius:14px;background:#1a2a43;color:#eaf1ff;align-self:flex-start; } .support-message.from-admin { align-self:flex-end;background:#30305b;border:1px solid #5850a1; } .support-message small { display:block;font-size:9px;color:#aebce0;font-weight:800;margin-bottom:5px; } .support-message p { font-size:13px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere; } .support-message time { display:block;font-size:9px;color:#aab6ce;margin-top:6px; } .support-empty { padding:20px;text-align:center;color:#9eacc4;font-size:12px;line-height:1.5; }
+        .support-reply-row { display:flex;gap:8px;padding:12px;border-top:1px solid #2c3d5a; } .support-reply-row textarea { flex:1;min-width:0;resize:vertical;border:1px solid #344663;border-radius:10px;padding:11px;font:inherit; } .support-reply-row .btn-save { align-self:stretch;white-space:nowrap; }
+        @media(max-width:760px) { .support-admin-layout { grid-template-columns:1fr; } .support-ticket-list { max-height:260px; } .support-conversation-head { align-items:flex-start; } .support-reply-row { flex-direction:column; } }
+    </style>
+
+<!-- BXRMSZ V5: premium light high-contrast theme -->
+<style id="bxrmsz-v5-high-contrast-theme">
+/* BXRMSZ V5 — Premium Light / High Contrast Theme */
+:root {
+  color-scheme: light;
+  --v5-bg: #f4f7fc;
+  --v5-surface: #ffffff;
+  --v5-surface-soft: #f8faff;
+  --v5-text: #17243a;
+  --v5-muted: #596a82;
+  --v5-border: #dce5f0;
+  --v5-blue: #245eea;
+  --v5-blue-dark: #1749c7;
+  --v5-blue-soft: #eaf1ff;
+  --v5-shadow: 0 10px 30px rgba(25, 48, 86, .07);
+}
+html { background: var(--v5-bg) !important; color-scheme: light !important; }
+body { background: var(--v5-bg) !important; color: var(--v5-text) !important; }
+body, body * { text-shadow: none !important; }
+h1,h2,h3,h4,h5,h6,p,li,label,strong,b,th,td { color: var(--v5-text); }
+a { color: var(--v5-blue); }
+small,.muted,.auth-sub,.login-sub,.section-subtitle,.help-text,.hint { color: var(--v5-muted) !important; }
+input,select,textarea,.login-input,.form-inp,.search-input,.profile-name-input,.swal2-input,.swal2-textarea {
+  background: #fff !important; color: #17243a !important; border: 1px solid #cbd7e6 !important;
+  caret-color: var(--v5-blue) !important;
+}
+input::placeholder,textarea::placeholder { color: #77869b !important; opacity: 1 !important; }
+input:focus,select:focus,textarea:focus { outline: none !important; border-color: var(--v5-blue) !important; box-shadow: 0 0 0 3px rgba(36,94,234,.13) !important; }
+button,.btn,.btn-save,.login-btn,.btn-order,.btn-main,.track-btn,.primary {
+  color: #fff !important; background: linear-gradient(135deg,#2865f0,#174bc8) !important;
+  border-color: transparent !important; box-shadow: 0 6px 16px rgba(36,94,234,.16) !important;
+}
+button:disabled { opacity: .55 !important; }
+.auth-card,.login-card,.card,.gradient-card,.history-card,.price-card,.service-card,.content-card,
+.profile-modal-container,.dropdown-menu,.dropdown-sheet,.menu-panel,.track-box,.order-card,
+.empty-state,.stat-box,.user-item,.order-clean-item,.payment-card,.category-block,.service-row,
+.settings-group,.wallet-repair-row,.support-conversation,.support-ticket-item,.support-shortcut {
+  background: var(--v5-surface) !important; color: var(--v5-text) !important;
+  border: 1px solid var(--v5-border) !important; box-shadow: var(--v5-shadow) !important;
+}
+.auth-card,.login-card { border-radius: 26px !important; }
+.auth-title,.login-title,.card-title,.section-title,.header-title,.admin-header h3,
+.history-content strong,.history-amount strong,.form-label,.service-name,.order-id,
+.support-ticket-top b,.support-conversation-head b { color: var(--v5-text) !important; }
+.auth-sub,.login-sub,.history-content small,.history-amount small,.service-desc,
+.order-date-text,.support-ticket-item small,.support-ticket-item time,
+.support-ticket-preview,.support-conversation-head small,.support-empty { color: var(--v5-muted) !important; }
+#auth-screen,.login-container { background: linear-gradient(145deg,#f8faff 0%,#edf3fc 100%) !important; }
+.logo-css { background: linear-gradient(145deg,#2865f0,#174bc8) !important; outline-color: #2865f0 !important; }
+.admin-header,.nav-grid,.app-header,.top,.header,.nav-bar {
+  background: rgba(255,255,255,.97) !important; color: var(--v5-text) !important;
+  border-color: var(--v5-border) !important; box-shadow: 0 3px 14px rgba(25,48,86,.045) !important;
+}
+.nav-btn-modern { background: #f5f8fd !important; color: #40516a !important; border: 1px solid #dce5f0 !important; box-shadow: none !important; }
+.nav-btn-modern:hover,.nav-btn-modern.active { background: linear-gradient(135deg,#2865f0,#174bc8) !important; color: #fff !important; border-color: transparent !important; }
+.nav-item { color: #63728a !important; }
+.nav-item.active { color: var(--v5-blue) !important; }
+.logout-btn { background: #fff1f1 !important; color: #bd3030 !important; border: 1px solid #ffd6d6 !important; box-shadow: none !important; }
+.btn-white { background: #fff !important; color: var(--v5-blue) !important; border: 1px solid #cbdaf5 !important; }
+.dropdown-item { color: var(--v5-text) !important; }
+.dropdown-item:hover { background: var(--v5-blue-soft) !important; }
+.support-shortcut { background: linear-gradient(120deg,#f0f5ff,#fff) !important; color: var(--v5-text) !important; }
+.support-shortcut b { color: var(--v5-text) !important; }
+.support-shortcut small { color: var(--v5-muted) !important; }
+.bal-badge,.order-id,.order-service,.status-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #d6e3fb !important; }
+.order-id:hover,.status-btn:hover { background: var(--v5-blue) !important; color: #fff !important; }
+.order-link-wrap { background: #f5f8fd !important; border: 1px solid #e2e9f3 !important; }
+.order-link-text { color: #244a91 !important; overflow-wrap: anywhere !important; }
+.order-cost,.order-amount-badge { color: #1749c7 !important; }
+.status-badge { color: #34445b !important; }
+.empty-state p { color: var(--v5-muted) !important; }
+/* Wallet summary keeps a deliberate dark-blue accent panel, with white readable text. */
+.balance { background: linear-gradient(135deg,#172b50,#234a86) !important; color: #fff !important; border: 0 !important; }
+.balance *,.balance strong,.balance small { color: #fff !important; }
+/* Support inbox and conversation: distinct, readable sender bubbles. */
+.ticket,.support-ticket-item { background: #fff !important; color: var(--v5-text) !important; border-color: var(--v5-border) !important; }
+.ticket.active,.support-ticket-item.active { background: #edf4ff !important; border-color: #8fb2ff !important; }
+.ticket b,.support-ticket-item b { color: var(--v5-text) !important; }
+.ticket small,.support-ticket-item small,.support-ticket-item time { color: var(--v5-muted) !important; }
+.msg,.support-message { background: #eef3fa !important; color: #1b2b43 !important; border: 1px solid #dce5f0 !important; }
+.msg.admin,.support-message.from-admin { background: #245eea !important; color: #fff !important; border: 1px solid #245eea !important; }
+.msg.admin *,.support-message.from-admin * { color: #fff !important; }
+.msg small,.support-message small,.msg time,.support-message time { color: #62738d !important; }
+.msg.admin small,.msg.admin time,.support-message.from-admin small,.support-message.from-admin time { color: #e4edff !important; }
+.support-conversation { background: #fff !important; }
+.support-conversation-head { background: #f5f8fd !important; border-color: var(--v5-border) !important; }
+.support-conversation-head b { color: var(--v5-text) !important; }
+.support-conversation-head small { color: var(--v5-muted) !important; }
+.support-close-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #cbdaf5 !important; }
+.support-reply-row { background: #fff !important; border-color: var(--v5-border) !important; }
+.support-status { background: #eaf1ff !important; color: #244a91 !important; }
+.support-status.open,.tag { background: #fff4d9 !important; color: #8a5700 !important; }
+.support-status.closed,.tag.closed { background: #eef1f5 !important; color: #526174 !important; }
+.tag.replied { background: #e4f3ff !important; color: #155c91 !important; }
+.notice { background: #fff8e8 !important; color: #76520b !important; border: 1px solid #f3dfaa !important; }
+.chips button { background: #edf3ff !important; color: #244a91 !important; box-shadow: none !important; }
+.status { background: #fff4d9 !important; color: #805600 !important; }
+.u-bal { background: #edf3ff !important; color: #244a91 !important; }
+.u-edit { background: #edf3ff !important; color: #244a91 !important; }
+.wallet-repair-row b,.wallet-repair-row small { color: var(--v5-text) !important; }
+.wallet-repair-row small { color: var(--v5-muted) !important; }
+.support-count { background: #e5edff !important; color: #1749c7 !important; }
+.swal2-popup { background: #fff !important; color: var(--v5-text) !important; }
+.swal2-title,.swal2-html-container { color: var(--v5-text) !important; }
+.swal2-input,.swal2-textarea { color: var(--v5-text) !important; }
+.copy-toast { background: #17243a !important; color: #fff !important; }
+.page-credit,.page-credit span { color: #718096 !important; }
+@media (max-width: 700px) {
+  .admin-header { padding: 13px 14px !important; }
+  .nav-grid { padding: 10px 12px !important; }
+  .nav-btn-modern { min-width: 0 !important; padding: 10px 11px !important; font-size: 12px !important; }
+  .wrap { padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Additional admin-specific contrast overrides for dynamic content */
+body .user-item h4, body .user-item p, body .stat-box h2, body .stat-box p,
+body .card h4, body .admin-header h3, body .support-ticket-preview,
+body .support-ticket-item small, body .support-ticket-item time,
+body .support-message p, body .support-empty { color: var(--v5-text) !important; }
+body .user-item p, body .stat-box p, body .support-ticket-item small,
+body .support-ticket-item time, body .support-empty { color: var(--v5-muted) !important; }
+body .support-message.from-admin p { color: #fff !important; }
+body .support-ticket-item.active .support-ticket-preview { color: #405a82 !important; }
+
+</style>
+
+<style id="bxrmsz-payment-inbox-v6">
+.payment-inbox-card{border-radius:20px!important}.payment-inbox-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}.payment-inbox-head h4{margin:0!important;font-size:17px!important;color:#17243a!important}.payment-inbox-head p{margin:6px 0 0;color:#61728a;font-size:12px;line-height:1.5}.payment-refresh-btn{flex:0 0 auto;border:1px solid #d4e1f5!important;background:#f2f6ff!important;color:#1d4ed8!important;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:850;box-shadow:none!important}.payment-legend{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 15px}.payment-pill{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.02em}.payment-pill.processing{background:#eaf2ff;color:#1d4ed8}.payment-pill.successful{background:#e9f8ef;color:#15803d}.payment-pill.rejected{background:#fff0f0;color:#b42318}.manual-payment-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}.manual-payment-card{background:#fff;border:1px solid #e1e9f4;border-radius:15px;padding:15px;box-shadow:0 6px 20px rgba(24,48,84,.045);min-width:0}.manual-payment-card .mp-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.manual-payment-card .mp-amount{font-size:22px;font-weight:900;letter-spacing:-.5px;color:#17243a}.manual-payment-card .mp-name{font-size:14px;font-weight:850;color:#17243a;margin:13px 0 3px}.manual-payment-card .mp-meta{font-size:11px;color:#63748b;margin:3px 0;overflow-wrap:anywhere;line-height:1.45}.manual-payment-card .mp-divider{height:1px;background:#edf1f7;margin:11px 0}.manual-payment-card .mp-actions{display:flex;gap:8px;margin-top:13px}.manual-payment-card .mp-actions button{flex:1;min-width:0;border:0;border-radius:9px;padding:11px 8px;font-size:11px;font-weight:900;color:#fff}.manual-payment-card .mp-approve{background:#168344!important}.manual-payment-card .mp-reject{background:#dc4444!important}.manual-payment-card .mp-proof{display:inline-flex;margin-top:5px;padding:7px 10px;background:#eef4ff;border-radius:8px;color:#1d4ed8!important;text-decoration:none;font-size:11px;font-weight:850}.manual-payment-empty{background:#f8faff;border:1px dashed #cad7e8;border-radius:13px;padding:22px;text-align:center;color:#5d6f88;font-size:12px;line-height:1.6}.manual-payment-error{background:#fff5f5;border:1px solid #ffd5d5;border-radius:12px;padding:14px;color:#a32323;font-size:12px;line-height:1.55;overflow-wrap:anywhere}.manual-payment-error b{color:#a32323}.payment-inbox-card .empty-state{background:#f8faff!important;color:#5d6f88!important}
+@media(max-width:560px){.payment-inbox-head{align-items:stretch;flex-direction:column}.payment-refresh-btn{width:100%}.manual-payment-card .mp-actions{flex-direction:column}.manual-payment-card .mp-actions button{width:100%}}
+</style>
+
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-title" id="loginSiteName">SMM Panel</div>
+            <div class="login-sub">Admin Panel Login</div>
+            <input type="email" id="adminEmail" class="login-input" placeholder="Admin Email">
+            <input type="password" id="adminPass" class="login-input" placeholder="Password">
+            <button class="login-btn" onclick="adminLogin()">LOGIN TO PANEL</button>
+            
+            <p style="font-size:11px;color:#64748b;margin-top:14px;line-height:1.5">Admin access is managed securely through Firebase Authentication.</p>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="hidden">
+        <div class="admin-header">
+            <h3>
+                <span id="headerSiteName">SMM Panel</span>
+            </h3>
+            <button class="logout-btn" onclick="adminLogout()">
+                <i class="fa-solid fa-power-off"></i> Logout
+            </button>
+        </div>
+
+        <!-- 3-LINE BUTTON NAVIGATION -->
+        <div class="nav-grid">
+            <div class="nav-row">
+                <button class="nav-btn-modern active" data-tab="users"><i class="fa-solid fa-users"></i> Users</button>
+                <button class="nav-btn-modern" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> Orders <span id="pendingOrderCount" style="display:inline-block;min-width:20px;margin-left:5px;padding:2px 6px;border-radius:20px;background:#fee2e2;color:#b91c1c;font-size:10px">0</span></button>
+                <button class="nav-btn-modern" data-tab="services"><i class="fa-solid fa-gear"></i> Services</button>
+            </div>
+            <div class="nav-row">
+                <button class="nav-btn-modern" data-tab="payments"><i class="fa-solid fa-money-bill-transfer"></i> Payments <span id="pendingPaymentCount" style="display:inline-block;min-width:20px;margin-left:5px;padding:2px 6px;border-radius:20px;background:#fef3c7;color:#92400e;font-size:10px">0</span></button>
+                <button class="nav-btn-modern" data-tab="support"><i class="fa-solid fa-headset"></i> Support <span id="pendingSupportCount" class="support-count">0</span></button>
+                <button class="nav-btn-modern" data-tab="settings"><i class="fa-solid fa-sliders-h"></i> Settings</button>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h2 id="totalUsers">0</h2>
+                    <p>Total Users</p>
+                </div>
+                <div class="stat-box">
+                    <h2 id="totalOrders">0</h2>
+                    <p>Total Orders</p>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="tab-users" class="section active-sec">
+                <div class="card">
+                    <h4><i class="fa-solid fa-magnifying-glass"></i> Manage Users</h4>
+                    <input type="text" id="userSearch" class="search-input" oninput="filterUsers()" placeholder="Search by Email or Name...">
+                    <div class="wallet-repair-row"><div><b>Wallet format repair</b><small>Converts old numeric-text balances to numbers without changing the amount.</small></div><button class="btn-save" onclick="normalizeWalletBalances()">FIX WALLET DATA</button></div>
+                    <div id="userListContainer">Loading Users...</div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="tab-orders" class="section">
+                <div class="card">
+                    <h4><i class="fa-solid fa-receipt"></i> Manual Order Requests</h4>
+                    <p style="color:#64748b;font-size:12px;margin:8px 0 14px">No provider is called automatically. The customer wallet is deducted when an order is submitted; you review and process every order manually. If you reject an order, manually refund the customer from Users → Add Money when appropriate.</p>
+                    <div id="ordersListContainer">Loading orders...</div>
+                </div>
+            </div>
+
+            <!-- Services Tab -->
+            <div id="tab-services" class="section">
+                <div class="card">
+                    <h4><i class="fa-solid fa-plus-circle"></i> Add New Service</h4>
+                    <input id="newCat" class="form-inp" placeholder="Category (e.g., instagram)">
+                    <input id="newName" class="form-inp" placeholder="Service Name">
+                    <input id="newId" class="form-inp" placeholder="Service ID">
+                    <input id="newPrice" class="form-inp" placeholder="Price per 1000 (₹)">
+                    <textarea id="newDesc" class="form-inp" rows="2" placeholder="Description (optional)"></textarea>
+                    <button class="btn-save" onclick="addService()"><i class="fa-solid fa-save"></i> ADD SERVICE</button>
+                </div>
+                <div class="card">
+                    <h4><i class="fa-solid fa-list"></i> All Services</h4>
+                    <div id="servicesContainer">Loading services...</div>
+                </div>
+            </div>
+
+            <!-- Manual Payments Tab -->
+            <div id="tab-payments" class="section">
+                <div class="card payment-inbox-card">
+                    <div class="payment-inbox-head"><div><h4><i class="fa-solid fa-money-bill-transfer"></i> Deposit Requests</h4><p>Verify the UTR in your UPI app, then approve to credit the wallet.</p></div><button class="payment-refresh-btn" type="button" onclick="refreshManualPayments()"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                    <div class="payment-legend"><span class="payment-pill processing">Processing</span><span class="payment-pill successful">Successfully</span><span class="payment-pill rejected">Rejected</span></div>
+                    <div id="manualPaymentsContainer">Loading payment requests…</div>
+                </div>
+            </div>
+
+            <!-- Support Inbox -->
+            <div id="tab-support" class="section">
+                <div class="card">
+                    <h4><i class="fa-solid fa-headset"></i> Customer Support Inbox</h4>
+                    <p style="color:#64748b;font-size:12px;margin:8px 0 14px">Customers can raise complaints or ask questions here. Reply directly from this panel; conversations update live.</p>
+                    <div class="support-admin-layout"><div id="supportTicketsList" class="support-ticket-list">Loading support tickets...</div><div id="supportConversationPanel" class="support-conversation hidden"><div class="support-conversation-head"><div><b id="supportConversationTitle">Select a conversation</b><small id="supportConversationMeta"></small></div><button class="support-close-btn" id="closeSupportTicketBtn" onclick="closeSupportTicket()">Close ticket</button></div><div id="supportMessagesList" class="support-messages-list"><div class="support-empty">Select a customer conversation to view messages.</div></div><div class="support-reply-row"><textarea id="adminSupportReply" rows="2" maxlength="2000" placeholder="Write a reply to the customer..."></textarea><button class="btn-save" onclick="sendAdminSupportReply()"><i class="fa-solid fa-paper-plane"></i> SEND</button></div></div></div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="section">
+                <div class="card">
+                    <h4><i class="fa-solid fa-sliders-h"></i> Admin Settings</h4>
+                    
+                    <div class="settings-group">
+                        <h5><i class="fa-solid fa-lock"></i> Admin Login</h5>
+                        <p style="font-size:12px;color:#64748b;line-height:1.5">Admin accounts and passwords are managed in Firebase Authentication. Passwords are never stored in the Realtime Database.</p>
+                    </div>
+                    
+                    <!-- Site Identity: only site name -->
+                    <div class="settings-group">
+                        <h5><i class="fa-solid fa-store"></i> Site Identity</h5>
+                        <label class="form-label">Site Name</label>
+                        <input type="text" id="settingsSiteName" class="form-inp">
+                    </div>
+                    
+                    <!-- Developer Details - Hardcoded links (replace these with your own) -->
+                    <div class="settings-group">
+                        <h5><i class="fa-solid fa-code"></i> Developer Details</h5>
+                        <div class="dev-button-group">
+                            <!-- EDIT THESE LINKS: Replace the href value with your actual links -->
+                            <a href="https://t.me/vishalcodeverse" id="devTelegramBtn" class="dev-btn telegram" target="_blank">
+                                <i class="fa-brands fa-telegram"></i> Telegram Channel
+                            </a>
+                            <a href="https://vcprovider.shop" id="devProviderBtn" class="dev-btn provider" target="_blank">
+                                <i class="fa-solid fa-rocket"></i> Best Provider SMM Link
+                            </a>
+                            <a href="https://www.youtube.com/@VishalCodeVerse" id="devYoutubeBtn" class="dev-btn youtube" target="_blank">
+                                <i class="fa-brands fa-youtube"></i> Subscribe Developer YouTube
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-save" onclick="saveAllSettings()"><i class="fa-solid fa-floppy-disk"></i> SAVE ALL SETTINGS</button>
+                </div>
+            </div>
+            
+            <!-- Credit Footer -->
+            <div class="credit-footer">
+                <span>Vishal CodeVerse</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+  apiKey: "AIzaSyDNMyLK7ETCYRxmFuuIWlGqZBMCi6-uM4s",
+  authDomain: "my-smm-pannel-56a68.firebaseapp.com",
+  databaseURL: "https://my-smm-pannel-56a68-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-smm-pannel-56a68",
+  storageBucket: "my-smm-pannel-56a68.firebasestorage.app",
+  messagingSenderId: "669926794608",
+  appId: "1:669926794608:web:b2e26d6b1f88339685dbb5"
+};
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+        let allUsers = [];
+        let knownOrderKeys = new Set();
+        let firstOrdersSnapshot = true;
+        let supportTicketsCache = [];
+        let selectedSupportTicket = null;
+        let activeSupportMessagesRef = null;
+        
+        function checkAdminExists() {
+            // Admin accounts are created in Firebase Authentication, never in the database.
+            return;
+        }
+
+        function initNavigation() {
+            const navBtns = document.querySelectorAll('.nav-btn-modern');
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active-sec'));
+                    document.getElementById('tab-' + tabId).classList.add('active-sec');
+                });
+            });
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            initNavigation();
+            loadAllData();
+        }
+
+        async function checkAdminAuth() {
+            auth.onAuthStateChanged(async user => {
+                if (!user) {
+                    document.getElementById('loginScreen').classList.remove('hidden');
+                    document.getElementById('adminPanel').classList.add('hidden');
+                    return;
+                }
+                try {
+                    const token = await user.getIdTokenResult(true);
+                    if (token.claims && token.claims.admin === true) showAdminPanel();
+                    else {
+                        await auth.signOut();
+                        Swal.fire('Access denied', 'This Firebase account does not have the admin permission.', 'error');
+                    }
+                } catch (error) {
+                    await auth.signOut();
+                    Swal.fire('Authentication error', error.message || 'Please try again.', 'error');
+                }
+            });
+        }
+
+        function loadAllData() {
+            fetchUsers();
+            fetchOrders();
+            fetchServices();
+            fetchManualPayments();
+            fetchSupportTickets();
+            loadSettingsIntoForm();
+            loadSiteSettings();
+        }
+        
+        function loadSiteSettings() {
+            db.ref('site_config').on('value', snap => {
+                const data = snap.val() || {};
+                if(data.siteName) {
+                    document.getElementById('headerSiteName').innerText = data.siteName;
+                    document.getElementById('loginSiteName').innerText = data.siteName;
+                }
+            });
+        }
+        
+        function loadSettingsIntoForm() {
+            db.ref('site_config').once('value', snap => {
+                const data = snap.val() || {};
+                document.getElementById('settingsSiteName').value = data.siteName || '';
+            });
+        }
+        
+        function saveAllSettings() {
+            const siteName = document.getElementById('settingsSiteName').value.trim();
+            db.ref('site_config').update({ siteName: siteName || 'SMM Panel' }).then(() => {
+                Swal.fire('Success', 'Site settings saved.', 'success');
+                loadSiteSettings();
+            }).catch(error => Swal.fire('Error', error.message || 'Could not save settings.', 'error'));
+        }
+
+        async function createAdmin() {
+            Swal.fire('Use Firebase Authentication', 'Create the admin user in Firebase Authentication, then assign the admin custom claim from a trusted Admin SDK environment. Do not create admin passwords in the database.', 'info');
+        }
+
+        async function adminLogin() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const pass = document.getElementById('adminPass').value;
+            if (!email || !pass) return Swal.fire('Error', 'Enter your Firebase Auth email and password.', 'warning');
+            try {
+                const credential = await auth.signInWithEmailAndPassword(email, pass);
+                const token = await credential.user.getIdTokenResult(true);
+                if (!token.claims || token.claims.admin !== true) {
+                    await auth.signOut();
+                    return Swal.fire('Access denied', 'This account is not assigned the admin permission.', 'error');
+                }
+                showAdminPanel();
+                Swal.fire('Success', 'Admin login successful.', 'success');
+            } catch (error) {
+                Swal.fire('Login failed', error.message || 'Check your Firebase Auth credentials.', 'error');
+            }
+        }
+
+        function adminLogout() {
+            Swal.fire({ title: 'Logout?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes, Logout' }).then(result => {
+                if (result.isConfirmed) auth.signOut();
+            });
+        }
+
+        function parseAdminWalletAmount(value) {
+            if (value === null || value === undefined || value === '') return 0;
+            if (typeof value === 'number') return Number.isFinite(value) ? value : NaN;
+            return Number(String(value).replace(/[₹,\s]/g, '').replace(/INR/ig, ''));
+        }
+
+        async function normalizeWalletBalances() {
+            const result = await Swal.fire({title:'Repair wallet formats?',text:'This only converts valid old text balances (for example "₹1,000") into numeric values. The displayed amount will not change.',icon:'question',showCancelButton:true,confirmButtonText:'Repair balances'});
+            if (!result.isConfirmed) return;
+            try {
+                const snap = await db.ref('users').once('value');
+                const jobs = []; let repaired = 0, skipped = 0;
+                snap.forEach(child => {
+                    const profile = child.val() || {};
+                    if (typeof profile.balance === 'number' && Number.isFinite(profile.balance)) return;
+                    const amount = parseAdminWalletAmount(profile.balance);
+                    if (Number.isFinite(amount) && amount >= 0) {
+                        jobs.push(db.ref('users/' + child.key + '/balance').set(Math.round((amount + Number.EPSILON) * 100) / 100));
+                        repaired++;
+                    } else skipped++;
+                });
+                await Promise.all(jobs);
+                Swal.fire('Wallet check complete', `${repaired} balance(s) normalized. ${skipped} invalid value(s) were left unchanged. No wallet amount was intentionally changed.`, skipped ? 'warning' : 'success');
+            } catch (error) { Swal.fire('Could not repair wallets', error.message || 'Please check Firebase rules and admin access.', 'error'); }
+        }
+
+        function fetchUsers() { 
+            db.ref('users').on('value', snap => { 
+                allUsers = []; 
+                let count=0; 
+                snap.forEach(c=>{ 
+                    let u=c.val(); 
+                    u.uid=c.key; 
+                    allUsers.push(u); 
+                    count++; 
+                }); 
+                document.getElementById('totalUsers').innerText=count; 
+                renderUsers([...allUsers].reverse()); 
+            }); 
+        }
+        
+        function renderUsers(arr) { 
+            const list = document.getElementById('userListContainer'); 
+            list.innerHTML = ''; 
+            if(arr.length===0) { list.innerHTML='<div class="empty-state">No users</div>'; return; } 
+            arr.forEach(u=>{ 
+                list.innerHTML+=`<div class="user-item"><div class="u-info"><h4>${u.username||'User'}</h4><p>${u.email}</p></div><div style="display:flex; gap:8px;"><span class="u-bal"><i class="fa-solid fa-indian-rupee-sign"></i> ${(Number.isFinite(parseAdminWalletAmount(u.balance)) ? parseAdminWalletAmount(u.balance) : 0).toFixed(2)}</span><button class="u-edit" title="Edit balance" onclick="editBalance('${u.uid}', ${u.balance||0})"><i class="fa-solid fa-pen"></i></button><button class="u-edit" title="Manually add money" style="background:#dcfce7;color:#15803d" onclick="addWalletMoney('${u.uid}')"><i class="fa-solid fa-plus"></i></button></div></div>`; 
+            }); 
+        }
+        
+        function filterUsers() { 
+            const q = document.getElementById('userSearch').value.toLowerCase(); 
+            const filtered = allUsers.filter(u=> (u.email&&u.email.toLowerCase().includes(q))||(u.username&&u.username.toLowerCase().includes(q))); 
+            renderUsers(filtered); 
+        }
+        
+        function editBalance(uid, bal) { 
+            Swal.fire({ title: 'Edit Balance', input: 'number', inputValue: bal, showCancelButton: true, confirmButtonText: 'Update' }).then(r=>{ 
+                if(r.isConfirmed) { 
+                    db.ref('users/'+uid).update({balance: parseFloat(r.value)}); 
+                    Swal.fire('Updated','Balance updated','success'); 
+                } 
+            }); 
+        }
+
+        async function addWalletMoney(uid) {
+            const result = await Swal.fire({
+                title: 'Manually add wallet money',
+                input: 'number', inputLabel: 'Amount in INR', inputAttributes: { min: 1, max: 100000, step: '0.01' },
+                showCancelButton: true, confirmButtonText: 'Add money',
+                inputValidator: value => (!Number.isFinite(Number(value)) || Number(value) <= 0 || Number(value) > 100000) ? 'Enter an amount between ₹1 and ₹100,000.' : undefined
+            });
+            if (!result.isConfirmed) return;
+            const amount = Math.round(Number(result.value) * 100) / 100;
+            try {
+                const profileRef = db.ref('users/' + uid);
+                const tx = await profileRef.transaction(current => {
+                    if (!current || typeof current !== 'object') return;
+                    const oldBalance = parseAdminWalletAmount(current.balance);
+                    if (!Number.isFinite(oldBalance) || oldBalance < 0) return;
+                    return { ...current, balance: Math.round((oldBalance + amount + Number.EPSILON) * 100) / 100 };
+                }, undefined, false);
+                if (!tx.committed) throw new Error('Wallet balance could not be updated. Check whether the customer profile has a valid numeric balance.');
+                const logRef = db.ref('wallet_transactions/' + uid).push();
+                await logRef.set({ type:'credit', amount, note:'Manual admin wallet credit', createdAt:firebase.database.ServerValue.TIMESTAMP, adminEmail:auth.currentUser?.email || 'Admin' });
+                Swal.fire('Money added', `₹${amount.toFixed(2)} added to the customer's wallet.`, 'success');
+            } catch (error) {
+                Swal.fire('Error', error.message || 'Could not add wallet money.', 'error');
+            }
+        }
+        
+        function fetchOrders() {
+            db.ref('orders').on('value', snap => {
+                const container = document.getElementById('ordersListContainer');
+                const allOrders = [];
+                const currentKeys = new Set();
+                if (snap.exists()) snap.forEach(userOrders => {
+                    userOrders.forEach(orderSnap => {
+                        const order = orderSnap.val() || {};
+                        const uid = userOrders.key;
+                        const key = orderSnap.key;
+                        const compoundKey = uid + '/' + key;
+                        currentKeys.add(compoundKey);
+                        allOrders.push({ ...order, uid, key, orderId: order.order_id || key });
+                        if (!firstOrdersSnapshot && !knownOrderKeys.has(compoundKey) && order.status === 'Pending Admin Approval') {
+                            Swal.fire({ toast:true, position:'top-end', icon:'info', title:'New order request received', text: order.email || 'A customer submitted an order', showConfirmButton:false, timer:3500 });
+                        }
+                    });
+                });
+                firstOrdersSnapshot = false;
+                knownOrderKeys = currentKeys;
+                const pendingCount = allOrders.filter(o => o.status === 'Pending Admin Approval').length;
+                document.getElementById('pendingOrderCount').textContent = pendingCount;
+                document.getElementById('totalOrders').innerText = allOrders.length;
+                allOrders.sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+                if (!allOrders.length) {
+                    container.innerHTML = '<div class="empty-state">No order requests yet</div>';
+                    return;
+                }
+                container.innerHTML = allOrders.map(order => {
+                    const status = safeText(order.status || 'Pending Admin Approval');
+                    const statusColor = status === 'Completed' ? '#15803d' : status === 'Rejected' ? '#dc2626' : status === 'Pending Admin Approval' ? '#b45309' : '#2563eb';
+                    const statusLabel = status === 'Completed' ? 'Successfully' : status === 'Processing' || status === 'Accepted' ? 'Processing' : status;
+                    const actions = order.status === 'Pending Admin Approval'
+                        ? `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px"><button class="btn-save" style="background:#059669" onclick="updateOrderStatus('${safeText(order.uid)}','${safeText(order.key)}','Accepted')">ACCEPT</button><button class="btn-save" style="background:#2563eb" onclick="updateOrderStatus('${safeText(order.uid)}','${safeText(order.key)}','Rejected')">REJECT</button></div>`
+                        : `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px">${order.status !== 'Processing' && order.status !== 'Completed' && order.status !== 'Rejected' ? `<button class="btn-save" style="background:#2563eb" onclick="updateOrderStatus('${safeText(order.uid)}','${safeText(order.key)}','Processing')">MARK PROCESSING</button>` : ''}${order.status !== 'Completed' && order.status !== 'Rejected' ? `<button class="btn-save" style="background:#059669" onclick="updateOrderStatus('${safeText(order.uid)}','${safeText(order.key)}','Completed')">MARK COMPLETED</button>` : ''}${order.status !== 'Rejected' && order.status !== 'Completed' ? `<button class="btn-save" style="background:#dc2626" onclick="updateOrderStatus('${safeText(order.uid)}','${safeText(order.key)}','Rejected')">REJECT</button>` : ''}</div>`;
+                    return `<div class="order-clean-item">
+                        <div class="order-header"><span class="order-id-badge"><i class="fa-solid fa-hashtag"></i> ${safeText(order.orderId)}</span><span class="order-amount-badge">₹${Number(order.cost||0).toFixed(2)}</span></div>
+                        <div style="font-size:13px;font-weight:700;margin:5px 0">${safeText(order.service_name || order.service || 'Service request')}</div>
+                        <div style="font-size:12px;color:#475569;margin:5px 0;word-break:break-all"><b>Customer:</b> ${safeText(order.email || order.uid)}</div>
+                        <div style="font-size:12px;color:#475569;margin:5px 0"><b>Quantity:</b> ${safeText(order.quantity)}</div>
+                        <div class="order-link-text" style="word-break:break-all"><i class="fa-solid fa-link"></i> ${safeText(order.link || 'No link')}</div>
+                        <div class="order-date-text"><i class="fa-regular fa-calendar"></i> ${safeText(order.date || 'Just now')}</div>
+                        <div style="font-size:11px;margin-top:8px;color:${statusColor}"><b>Status: ${statusLabel}</b> · Wallet: ${safeText(order.payment_status || 'Not charged')}</div>
+                        ${actions}
+                    </div>`;
+                }).join('');
+            });
+        }
+
+        async function updateOrderStatus(uid, key, status) {
+            const allowed = ['Accepted', 'Processing', 'Completed', 'Rejected'];
+            if (!allowed.includes(status)) return;
+            const confirmation = await Swal.fire({
+                title: `${status} order?`,
+                text: status === 'Rejected' ? 'The wallet was already deducted when this order was placed. If you reject it, manually refund the customer from Users → Add Money when appropriate.' : `Mark this order as ${status.toLowerCase()}? You will handle the actual order manually.`,
+                icon: 'question', showCancelButton: true, confirmButtonText: `Yes, ${status}`
+            });
+            if (!confirmation.isConfirmed) return;
+            try {
+                await db.ref(`orders/${uid}/${key}`).update({
+                    status,
+                    statusUpdatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    statusUpdatedBy: auth.currentUser?.email || 'Admin'
+                });
+                Swal.fire('Updated', `Order marked ${status.toLowerCase()}.`, 'success');
+            } catch (error) {
+                Swal.fire('Could not update', error.message || 'Check database rules and try again.', 'error');
+            }
+        }
+
+        function fetchSupportTickets() {
+            const list = document.getElementById('supportTicketsList');
+            const badge = document.getElementById('pendingSupportCount');
+            if (!list) return;
+            db.ref('support_tickets').off('value');
+            db.ref('support_tickets').on('value', snap => {
+                const rows = [];
+                if (snap.exists()) snap.forEach(userNode => userNode.forEach(ticketNode => rows.push({ uid:userNode.key, key:ticketNode.key, ...(ticketNode.val() || {}) })));
+                rows.sort((a,b) => Number(b.lastMessageAt || b.createdAt || 0) - Number(a.lastMessageAt || a.createdAt || 0));
+                supportTicketsCache = rows;
+                const openCount = rows.filter(t => String(t.status || 'open') === 'open').length;
+                if (badge) badge.textContent = String(openCount);
+                renderSupportTickets();
+            }, error => { list.innerHTML = `<div class="support-empty">Could not load support inbox: ${safeText(error.message || error.code)}</div>`; });
+        }
+
+        function renderSupportTickets() {
+            const list = document.getElementById('supportTicketsList');
+            if (!list) return;
+            if (!supportTicketsCache.length) { list.innerHTML = '<div class="support-empty">No customer messages yet. New complaints and questions will appear here.</div>'; return; }
+            list.innerHTML = supportTicketsCache.map(t => {
+                const active = selectedSupportTicket && selectedSupportTicket.uid === t.uid && selectedSupportTicket.key === t.key;
+                const status = String(t.status || 'open');
+                const stamp = t.lastMessageAt || t.createdAt;
+                const date = stamp ? new Date(Number(stamp)).toLocaleString() : 'Just now';
+                return `<button class="support-ticket-item ${active ? 'active' : ''}" onclick="openSupportConversation('${safeText(t.uid)}','${safeText(t.key)}')"><span class="support-ticket-top"><b>${safeText(t.subject || 'Customer query')}</b><em class="support-status ${safeText(status)}">${safeText(status.toUpperCase())}</em></span><small>${safeText(t.username || t.email || t.uid)}</small><span class="support-ticket-preview">${safeText(t.lastMessagePreview || 'Open conversation')}</span><time>${safeText(date)}</time></button>`;
+            }).join('');
+        }
+
+        function openSupportConversation(uid, ticketId) {
+            selectedSupportTicket = { uid, key:ticketId };
+            const ticket = supportTicketsCache.find(t => t.uid === uid && t.key === ticketId) || {};
+            document.getElementById('supportConversationPanel').classList.remove('hidden');
+            document.getElementById('supportConversationTitle').textContent = ticket.subject || 'Customer conversation';
+            document.getElementById('supportConversationMeta').textContent = (ticket.username || ticket.email || uid) + ' · ' + (ticket.email || uid);
+            renderSupportTickets();
+            if (activeSupportMessagesRef) activeSupportMessagesRef.off('value');
+            activeSupportMessagesRef = db.ref(`support_messages/${uid}/${ticketId}`);
+            activeSupportMessagesRef.on('value', snap => {
+                const box = document.getElementById('supportMessagesList');
+                const messages = []; if (snap.exists()) snap.forEach(m => messages.push({ key:m.key, ...(m.val() || {}) }));
+                messages.sort((a,b) => Number(a.createdAt || 0) - Number(b.createdAt || 0));
+                box.innerHTML = messages.length ? messages.map(m => `<div class="support-message ${m.sender === 'admin' ? 'from-admin' : 'from-customer'}"><small>${m.sender === 'admin' ? 'YOU · ADMIN' : 'CUSTOMER'}</small><p>${safeText(m.text || '')}</p><time>${m.createdAt ? safeText(new Date(Number(m.createdAt)).toLocaleString()) : ''}</time></div>`).join('') : '<div class="support-empty">No messages in this conversation yet.</div>';
+                box.scrollTop = box.scrollHeight;
+            }, error => { document.getElementById('supportMessagesList').innerHTML = `<div class="support-empty">Could not load messages: ${safeText(error.message || error.code)}</div>`; });
+        }
+
+        async function sendAdminSupportReply() {
+            if (!selectedSupportTicket) return Swal.fire('Select a conversation','Choose a customer ticket first.','info');
+            const input = document.getElementById('adminSupportReply');
+            const text = input.value.trim(); if (!text) return;
+            try {
+                const {uid,key} = selectedSupportTicket;
+                const ref = db.ref(`support_messages/${uid}/${key}`).push();
+                await ref.set({ sender:'admin', text, senderEmail:auth.currentUser?.email || 'Admin', createdAt:firebase.database.ServerValue.TIMESTAMP });
+                await db.ref(`support_tickets/${uid}/${key}`).update({ status:'replied', lastMessageAt:firebase.database.ServerValue.TIMESTAMP, lastMessagePreview:text.slice(0,140), lastAdminReplyAt:firebase.database.ServerValue.TIMESTAMP });
+                input.value = '';
+            } catch (error) { Swal.fire('Reply not sent', error.message || 'Please check Firebase database rules.', 'error'); }
+        }
+
+        async function closeSupportTicket() {
+            if (!selectedSupportTicket) return;
+            const confirm = await Swal.fire({title:'Close this ticket?',text:'The customer can start a new support request later.',icon:'question',showCancelButton:true,confirmButtonText:'Close ticket'});
+            if (!confirm.isConfirmed) return;
+            try { await db.ref(`support_tickets/${selectedSupportTicket.uid}/${selectedSupportTicket.key}`).update({status:'closed', closedAt:Date.now()}); Swal.fire('Ticket closed','This support conversation is now closed.','success'); }
+            catch(error) { Swal.fire('Could not close ticket',error.message || 'Please try again.','error'); }
+        }
+
+        function safeText(v) {
+            return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        let knownManualPaymentKeys = new Set();
+        let manualPaymentFirstSnapshot = true;
+        function renderManualPayments(snap) {
+            const box = document.getElementById('manualPaymentsContainer');
+            const badge = document.getElementById('pendingPaymentCount');
+            const rows = [];
+            if (snap && snap.exists()) snap.forEach(child => rows.push({key: child.key, ...(child.val() || {})}));
+            rows.sort((a,b) => Number(b.createdAt || b.submittedAt || 0) - Number(a.createdAt || a.submittedAt || 0));
+            const pending = rows.filter(p => ['pending','processing'].includes(String(p.status || 'pending').toLowerCase())).length;
+            if (badge) badge.textContent = String(pending);
+            const currentKeys = new Set(rows.map(p => p.key));
+            if (!manualPaymentFirstSnapshot) {
+                rows.forEach(p => {
+                    if (!knownManualPaymentKeys.has(p.key) && String(p.status || 'pending').toLowerCase() === 'pending') {
+                        Swal.fire({toast:true,position:'top-end',icon:'info',title:'New deposit request',text:(p.email || 'Customer')+' submitted a payment',showConfirmButton:false,timer:3500});
+                    }
+                });
+            }
+            knownManualPaymentKeys = currentKeys;
+            manualPaymentFirstSnapshot = false;
+            if (!rows.length) {
+                const dbHost = (firebase.app().options.databaseURL || 'Firebase Realtime Database').replace(/^https?:\/\//,'');
+                box.innerHTML = `<div class="manual-payment-empty"><b>No deposit requests found yet.</b><br>Customer requests are saved at <b>/manual_payments</b>.<br><small>Connected database: ${safeText(dbHost)}</small><br>Ask the customer to submit the request and confirm they see “Request submitted”. Then tap Refresh.</div>`;
+                return;
+            }
+            box.innerHTML = '<div class="manual-payment-list">' + rows.map(p => {
+                const status = String(p.status || 'pending').toLowerCase();
+                const isPending = status === 'pending' || status === 'processing';
+                const isSuccess = status === 'approved' || status === 'successful' || status === 'success';
+                const label = isSuccess ? 'Successfully' : isPending ? 'Processing' : status === 'rejected' ? 'Rejected' : safeText(status);
+                const pillClass = isSuccess ? 'successful' : isPending ? 'processing' : 'rejected';
+                const proof = typeof p.proof === 'string' && /^data:image\/(png|jpe?g|webp);base64,/i.test(p.proof)
+                    ? `<a class="mp-proof" href="${p.proof}" target="_blank" rel="noopener noreferrer">View payment screenshot</a>`
+                    : '<span class="mp-meta">No screenshot attached</span>';
+                const stamp = Number(p.createdAt || p.submittedAt || 0);
+                const when = stamp ? new Date(stamp).toLocaleString() : 'Time unavailable';
+                const customer = safeText(p.username || p.name || 'Customer');
+                const email = safeText(p.email || 'Email not available');
+                const uid = safeText(p.uid || p.userId || 'User ID unavailable');
+                const utr = safeText(p.utr || 'Not provided');
+                const amount = Number(p.amount || 0);
+                const actions = status === 'pending'
+                    ? `<div class="mp-actions"><button class="mp-approve" onclick="approveManualPayment('${safeText(p.key)}')">APPROVE & ADD MONEY</button><button class="mp-reject" onclick="rejectManualPayment('${safeText(p.key)}')">REJECT</button></div>`
+                    : (status === 'processing' ? '<div class="mp-meta">Approval is in progress. Refresh in a moment.</div>' : '');
+                return `<article class="manual-payment-card">
+                    <div class="mp-top"><span class="mp-amount">₹${Number.isFinite(amount) ? amount.toFixed(2) : '0.00'}</span><span class="payment-pill ${pillClass}">${label}</span></div>
+                    <div class="mp-name">${customer}</div><div class="mp-meta">${email}</div><div class="mp-meta">UID: ${uid}</div>
+                    <div class="mp-divider"></div><div class="mp-meta"><b>UTR:</b> ${utr}</div><div class="mp-meta"><b>Method:</b> ${safeText(p.paymentMethod || 'UPI')} · <b>Submitted:</b> ${safeText(when)}</div>
+                    ${proof}${actions}
+                </article>`;
+            }).join('') + '</div>';
+        }
+        function showManualPaymentError(error) {
+            const box = document.getElementById('manualPaymentsContainer');
+            const badge = document.getElementById('pendingPaymentCount');
+            if (badge) badge.textContent = '!';
+            const message = safeText(error && (error.message || error.code) || 'Permission denied');
+            const host = safeText((firebase.app().options.databaseURL || '').replace(/^https?:\/\//,''));
+            box.innerHTML = `<div class="manual-payment-error"><b>Could not load deposit requests.</b><br>Firebase: ${message}<br><br>Database: ${host}<br>Path: /manual_payments<br>Check that database.rules.json is published to this exact Realtime Database and this signed-in admin has the admin custom claim.</div>`;
+            console.error('Admin could not read manual_payments:', error);
+        }
+        function fetchManualPayments() {
+            const box = document.getElementById('manualPaymentsContainer');
+            box.innerHTML = '<div class="manual-payment-empty">Connecting to payment inbox…</div>';
+            db.ref('manual_payments').off('value');
+            db.ref('manual_payments').on('value', renderManualPayments, showManualPaymentError);
+        }
+        async function refreshManualPayments() {
+            const box = document.getElementById('manualPaymentsContainer');
+            box.innerHTML = '<div class="manual-payment-empty">Refreshing payment requests…</div>';
+            try {
+                if (auth.currentUser) await auth.currentUser.getIdToken(true);
+                const snap = await db.ref('manual_payments').once('value');
+                renderManualPayments(snap);
+            } catch (error) { showManualPaymentError(error); }
+        }
+
+        async function approveManualPayment(key) {
+            const ref = db.ref('manual_payments/' + key);
+            const snap = await ref.once('value');
+            const p = snap.val();
+            if (!p || p.status !== 'pending') return Swal.fire('Already processed', 'This payment request is no longer pending.', 'info');
+            const result = await Swal.fire({title:'Approve payment?',text:`Add ₹${Number(p.amount).toFixed(2)} to ${p.email || 'this user'} wallet? Verify the UTR in your UPI app first.`,icon:'warning',showCancelButton:true,confirmButtonText:'Approve & add balance'});
+            if (!result.isConfirmed) return;
+            let walletCredited = false;
+            try {
+                const claim = await ref.transaction(current => {
+                    if (!current || current.status !== 'pending') return;
+                    current.status = 'processing'; current.processingStartedAt = firebase.database.ServerValue.TIMESTAMP; return current;
+                });
+                if (!claim.committed) return Swal.fire('Already processed','This request has already been handled.','info');
+                const amount = Number(p.amount || 0);
+                const profileRef = db.ref('users/' + p.uid);
+                const walletTx = await profileRef.transaction(current => {
+                    if (!current || typeof current !== 'object') return;
+                    const oldBalance = parseAdminWalletAmount(current.balance);
+                    if (!Number.isFinite(oldBalance) || oldBalance < 0) return;
+                    return { ...current, balance: Math.round((oldBalance + amount + Number.EPSILON) * 100) / 100 };
+                }, undefined, false);
+                if (!walletTx.committed) throw new Error('Payment is reserved for approval, but the wallet balance could not be credited. Check the customer wallet format before retrying.');
+                walletCredited = true;
+                await ref.update({ status:'approved', approvedAt:firebase.database.ServerValue.TIMESTAMP, approvedBy:auth.currentUser?.email || 'Admin' });
+                db.ref('wallet_transactions/' + p.uid).push().set({ type:'credit', amount, note:'Approved manual UPI payment', paymentId:key, createdAt:firebase.database.ServerValue.TIMESTAMP, adminEmail:auth.currentUser?.email || 'Admin' }).catch(e=>console.warn('Wallet credit log failed:',e));
+                Swal.fire('Approved','Wallet balance has been updated.','success');
+            } catch (e) {
+                if (!walletCredited) {
+                    try { await ref.transaction(current => { if (!current || current.status !== 'processing') return; current.status = 'pending'; current.processingError = String(e.message || 'Wallet credit failed').slice(0,180); return current; }); } catch (_) {}
+                }
+                Swal.fire('Error', e.message || 'Could not approve payment.', 'error');
+            }
+        }
+
+        async function rejectManualPayment(key) {
+            const result = await Swal.fire({title:'Reject payment request?',icon:'warning',showCancelButton:true,confirmButtonText:'Reject',confirmButtonColor:'#dc2626'});
+            if (!result.isConfirmed) return;
+            const ref = db.ref('manual_payments/' + key);
+            try {
+                const tx = await ref.transaction(current => {
+                    if (!current || current.status !== 'pending') return;
+                    current.status = 'rejected'; current.rejectedAt = firebase.database.ServerValue.TIMESTAMP; return current;
+                });
+                Swal.fire(tx.committed ? 'Rejected' : 'Already processed', tx.committed ? 'Request rejected; no balance was added.' : 'This request is no longer pending.', tx.committed ? 'success' : 'info');
+            } catch(e) { Swal.fire('Error', e.message || 'Could not reject request.', 'error'); }
+        }
+
+        function fetchServices() {
+            db.ref('site_config/services').on('value', snap => {
+                const container = document.getElementById('servicesContainer');
+                if(!snap.exists() || Object.keys(snap.val()).length===0) { 
+                    container.innerHTML='<div class="empty-services"><i class="fa-regular fa-rectangle-list"></i> No services added yet</div>'; 
+                    return; 
+                }
+                const servicesData = snap.val();
+                const categories = Object.keys(servicesData);
+                let html = '<div class="services-wrapper">';
+                categories.forEach(cat => {
+                    const services = servicesData[cat];
+                    if(services && services.length>0) {
+                        html += `<div class="category-block"><div class="category-header"><i class="fa-regular fa-folder-open"></i><span>${cat.toUpperCase()}</span></div>`;
+                        services.forEach((svc, idx) => {
+                            html += `<div class="service-row">
+                                <div class="service-info">
+                                    <div class="service-name">${escapeHtml(svc.name || 'Unnamed')} ${svc.id ? `<span class="service-id-badge">ID: ${escapeHtml(svc.id)}</span>` : ''}</div>
+                                    ${svc.description ? `<div class="service-desc">${escapeHtml(svc.description)}</div>` : ''}
+                                </div>
+                                <div class="service-meta">
+                                    <div class="price-tag"><i class="fa-solid fa-indian-rupee-sign"></i> ${parseFloat(svc.price||0).toFixed(2)}</div>
+                                    <div class="action-buttons">
+                                        <button class="btn-service-edit" onclick="editService('${cat}', ${idx})"><i class="fa-regular fa-pen-to-square"></i> EDIT</button>
+                                        <button class="btn-service-del" onclick="delService('${cat}', ${idx})"><i class="fa-regular fa-trash-can"></i> DEL</button>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    }
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+            });
+        }
+        
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+        
+        function addService() {
+            const cat = document.getElementById('newCat').value.toLowerCase().trim(), 
+                  name = document.getElementById('newName').value.trim(), 
+                  id = document.getElementById('newId').value.trim(), 
+                  price = document.getElementById('newPrice').value, 
+                  desc = document.getElementById('newDesc').value.trim();
+                  
+            if(!cat || !name || !price) { 
+                Swal.fire('Error','Category, Name and Price are required', 'error'); 
+                return; 
+            }
+            
+            db.ref('site_config/services/'+cat).once('value', s => { 
+                let arr = s.exists() ? s.val() : []; 
+                arr.push({ 
+                    id: id, 
+                    name: name, 
+                    price: parseFloat(price), 
+                    description: desc || '' 
+                }); 
+                db.ref('site_config/services/'+cat).set(arr).then(() => { 
+                    Swal.fire('Added','Service added successfully','success'); 
+                    document.getElementById('newCat').value=''; 
+                    document.getElementById('newName').value=''; 
+                    document.getElementById('newId').value=''; 
+                    document.getElementById('newPrice').value=''; 
+                    document.getElementById('newDesc').value=''; 
+                }); 
+            });
+        }
+        
+        function editService(cat, idx) {
+            db.ref(`site_config/services/${cat}/${idx}`).once('value', s => { 
+                let svc = s.val(); 
+                Swal.fire({ 
+                    title:'Edit Service', 
+                    html:`<input id="swId" class="swal2-input" value="${svc.id||''}" placeholder="Service ID">
+                          <input id="swName" class="swal2-input" value="${svc.name||''}" placeholder="Name">
+                          <input id="swPrice" class="swal2-input" value="${svc.price||0}" placeholder="Price">
+                          <textarea id="swDesc" class="swal2-textarea" placeholder="Description (optional)">${svc.description||''}</textarea>`, 
+                    showCancelButton:true, 
+                    confirmButtonText:'Save Changes' 
+                }).then(res=>{ 
+                    if(res.isConfirmed){ 
+                        let newData={ 
+                            id: document.getElementById('swId').value, 
+                            name: document.getElementById('swName').value, 
+                            price: parseFloat(document.getElementById('swPrice').value), 
+                            description: document.getElementById('swDesc').value || ''
+                        }; 
+                        db.ref(`site_config/services/${cat}/${idx}`).update(newData); 
+                        Swal.fire('Updated','Service updated successfully','success'); 
+                    } 
+                }); 
+            });
+        }
+        
+        function delService(cat, idx) { 
+            Swal.fire({ 
+                title:'Delete Service?', 
+                icon:'warning', 
+                showCancelButton:true, 
+                confirmButtonText:'Yes' 
+            }).then(res=>{ 
+                if(res.isConfirmed){ 
+                    db.ref(`site_config/services/${cat}`).once('value', s=>{ 
+                        let arr=s.val(); 
+                        arr.splice(idx,1); 
+                        if(arr.length===0) db.ref(`site_config/services/${cat}`).remove(); 
+                        else db.ref(`site_config/services/${cat}`).set(arr); 
+                        Swal.fire('Deleted','Service removed','success'); 
+                    }); 
+                } 
+            }); 
+        }
+        
+        window.onload = function() {
+            checkAdminAuth();
+        };
+        
+        window.refreshManualPayments=refreshManualPayments;
+        window.editBalance=editBalance;
+        window.addWalletMoney=addWalletMoney;
+        window.updateOrderStatus=updateOrderStatus; 
+        window.filterUsers=filterUsers; 
+        window.addService=addService; 
+        window.editService=editService; 
+        window.delService=delService; 
+        window.saveAllSettings=saveAllSettings; 
+        window.adminLogin=adminLogin; 
+        window.adminLogout=adminLogout; 
+        window.createAdmin=createAdmin;
+        window.normalizeWalletBalances=normalizeWalletBalances;
+        window.openSupportConversation=openSupportConversation;
+        window.sendAdminSupportReply=sendAdminSupportReply;
+        window.closeSupportTicket=closeSupportTicket;
+    </script>
+</body>
+</html>

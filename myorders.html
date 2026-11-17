@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>My Orders · SMM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 10px;
+        }
+
+        /* header */
+        .app-header {
+            position: sticky; top: 0; width: 100%; height: 64px;
+            background: #ffffff;
+            display: flex; align-items: center; padding: 0 16px;
+            border-bottom: 1px solid #f0f2f5;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+        .back-btn {
+            font-size: 18px; color: #0a0a0a; margin-right: 12px; cursor: pointer;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            border-radius: 30px; transition: 0.15s; flex-shrink: 0;
+        }
+        .back-btn:active { background: #f1f5f9; transform: scale(0.94); }
+        .header-title { font-weight: 700; font-size: 18px; color: #0a0a0a; flex: 1; letter-spacing: -0.3px; }
+        .header-right {
+            font-size: 11px; font-weight: 600; color: #dc2626;
+            background: #fee2e2; padding: 4px 14px; border-radius: 30px;
+            flex-shrink: 0;
+        }
+
+        /* main */
+        .content-area {
+            padding: 16px 14px 20px;
+            max-width: 540px; margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        .track-box {
+            background: #fafcff;
+            border-radius: 28px; padding: 18px 18px 20px;
+            margin-bottom: 24px;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .track-box h4 {
+            font-size: 14px; font-weight: 700; color: #0a0a0a;
+            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .track-box h4 i { color: #dc2626; font-size: 16px; }
+        .search-group {
+            display: flex; gap: 10px; width: 100%; flex-wrap: nowrap;
+        }
+        .search-group input {
+            flex: 1; min-width: 0; padding: 12px 16px;
+            border-radius: 60px; border: 1.5px solid #e2e8f0;
+            font-size: 14px; font-weight: 500; background: white;
+            outline: none; transition: 0.2s; color: #0a0a0a;
+        }
+        .search-group input:focus { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.06); }
+        .track-btn {
+            background: #dc2626; color: white; border: none;
+            padding: 0 22px; border-radius: 60px; font-weight: 700; font-size: 13px;
+            cursor: pointer; white-space: nowrap; transition: 0.2s;
+            height: 48px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 2px 10px rgba(220,38,38,0.15);
+        }
+        .track-btn:hover { background: #b91c1c; transform: scale(1.01); }
+        .track-btn:active { transform: scale(0.97); }
+
+        .section-title {
+            font-size: 15px; font-weight: 700; color: #0a0a0a;
+            margin: 0 0 14px 4px; display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { color: #dc2626; font-size: 15px; }
+
+        /* order card */
+        .order-card {
+            background: #ffffff; border-radius: 24px; padding: 16px 16px 18px;
+            margin-bottom: 12px; border: 1px solid #edf2f7;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transition: 0.2s;
+        }
+        .order-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.04); transform: translateY(-1px); }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; flex-wrap: wrap; gap: 6px;
+        }
+        .order-id {
+            font-weight: 800; font-size: 12px; color: #0a0a0a;
+            background: #f1f5f9; padding: 4px 12px; border-radius: 40px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            transition: 0.15s; border: 1px solid transparent;
+        }
+        .order-id:hover { background: #dc2626; color: white; border-color: #dc2626; }
+        .order-id:hover .copy-icon { color: white; }
+        .copy-icon { font-size: 10px; opacity: 0.6; }
+        .status-badge {
+            font-size: 10px; font-weight: 700; padding: 4px 12px;
+            border-radius: 40px; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+
+        .order-service {
+            font-size: 12px; font-weight: 600; color: #1e293b;
+            background: #f1f5f9; padding: 3px 12px; border-radius: 30px;
+            display: inline-block; margin-bottom: 8px;
+        }
+        .order-link-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: #f8fafc; padding: 8px 12px; border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .order-link-text {
+            font-size: 12px; color: #475569; word-break: break-all;
+            flex: 1; line-height: 1.4;
+        }
+        .copy-link-btn {
+            background: transparent; border: none; color: #1e293b;
+            cursor: pointer; padding: 4px 8px; border-radius: 30px;
+            font-size: 13px; transition: 0.15s; flex-shrink: 0;
+        }
+        .copy-link-btn:hover { background: #e2e8f0; }
+        .copy-link-btn:active { transform: scale(0.9); }
+
+        .order-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 4px; flex-wrap: wrap; gap: 10px;
+        }
+        .order-cost {
+            font-weight: 800; font-size: 17px; color: #dc2626;
+        }
+        .order-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .status-btn {
+            background: #f1f5f9; color: #0a0a0a; border: none;
+            padding: 8px 18px; border-radius: 40px; font-size: 11px;
+            font-weight: 700; cursor: pointer; transition: 0.15s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .status-btn:hover { background: #dc2626; color: white; transform: scale(1.02); }
+        .status-btn:active { transform: scale(0.96); }
+        .status-btn i { font-size: 12px; }
+
+        .empty-state {
+            text-align: center; padding: 50px 20px;
+            background: #fafcff; border-radius: 32px;
+            border: 1px solid #edf2f7;
+        }
+        .empty-state i { font-size: 40px; color: #cbd5e1; margin-bottom: 14px; }
+        .empty-state p { color: #475569; font-size: 14px; font-weight: 500; }
+
+        /* toast */
+        .copy-toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: #0a0a0a; color: white; padding: 10px 24px;
+            border-radius: 60px; font-size: 13px; font-weight: 600;
+            z-index: 9999; opacity: 0; transition: all 0.25s ease;
+            pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+        /* footer credit */
+        .page-credit {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 500;
+            color: #94a3b8;
+            letter-spacing: 0.3px;
+            padding: 14px 0 4px;
+            border-top: 1px solid #f0f2f5;
+            margin-top: 12px;
+            width: 100%;
+        }
+        .page-credit span {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        @media (max-width: 420px) {
+            .track-btn { padding: 0 16px; font-size: 12px; }
+            .track-btn i { display: none; }
+            .order-footer { flex-direction: column; align-items: stretch; }
+            .order-actions { flex-direction: column; width: 100%; }
+            .status-btn { width: 100%; justify-content: center; padding: 10px; }
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .order-link-wrap { flex-wrap: wrap; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .order-card, .track-box { animation: fadeIn 0.3s ease; }
+    
+/* BXRMSZ premium midnight theme */
+body{background:radial-gradient(ellipse at top left,#17294a 0%,#0b1424 50%,#080f1b 100%) !important;color:#edf2ff !important}
+.top,.app-header{background:rgba(12,22,39,.94) !important;color:#edf2ff !important;border-color:#293b59 !important}
+.top a,.back-btn,.header-title{color:#edf2ff !important}
+.card,.track-box,.order-card,.balance{background:#121e33 !important;color:#edf2ff !important;border:1px solid #2a3a57 !important;box-shadow:0 16px 42px rgba(0,0,0,.2) !important}
+input,textarea{background:#0b1628 !important;color:#edf2ff !important;border-color:#344663 !important}
+.muted,.section-title,.order-service,.order-date-text{color:#aab6ce !important}
+button,.track-btn,.primary{background:linear-gradient(135deg,#7c6cff,#3f83ee) !important;color:#fff !important}
+.order-id,.status-badge{background:#1c2d49 !important;color:#dbe7ff !important}
+
+</style>
+
+<!-- BXRMSZ V5: premium light high-contrast theme -->
+<style id="bxrmsz-v5-high-contrast-theme">
+/* BXRMSZ V5 — Premium Light / High Contrast Theme */
+:root {
+  color-scheme: light;
+  --v5-bg: #f4f7fc;
+  --v5-surface: #ffffff;
+  --v5-surface-soft: #f8faff;
+  --v5-text: #17243a;
+  --v5-muted: #596a82;
+  --v5-border: #dce5f0;
+  --v5-blue: #245eea;
+  --v5-blue-dark: #1749c7;
+  --v5-blue-soft: #eaf1ff;
+  --v5-shadow: 0 10px 30px rgba(25, 48, 86, .07);
+}
+html { background: var(--v5-bg) !important; color-scheme: light !important; }
+body { background: var(--v5-bg) !important; color: var(--v5-text) !important; }
+body, body * { text-shadow: none !important; }
+h1,h2,h3,h4,h5,h6,p,li,label,strong,b,th,td { color: var(--v5-text); }
+a { color: var(--v5-blue); }
+small,.muted,.auth-sub,.login-sub,.section-subtitle,.help-text,.hint { color: var(--v5-muted) !important; }
+input,select,textarea,.login-input,.form-inp,.search-input,.profile-name-input,.swal2-input,.swal2-textarea {
+  background: #fff !important; color: #17243a !important; border: 1px solid #cbd7e6 !important;
+  caret-color: var(--v5-blue) !important;
+}
+input::placeholder,textarea::placeholder { color: #77869b !important; opacity: 1 !important; }
+input:focus,select:focus,textarea:focus { outline: none !important; border-color: var(--v5-blue) !important; box-shadow: 0 0 0 3px rgba(36,94,234,.13) !important; }
+button,.btn,.btn-save,.login-btn,.btn-order,.btn-main,.track-btn,.primary {
+  color: #fff !important; background: linear-gradient(135deg,#2865f0,#174bc8) !important;
+  border-color: transparent !important; box-shadow: 0 6px 16px rgba(36,94,234,.16) !important;
+}
+button:disabled { opacity: .55 !important; }
+.auth-card,.login-card,.card,.gradient-card,.history-card,.price-card,.service-card,.content-card,
+.profile-modal-container,.dropdown-menu,.dropdown-sheet,.menu-panel,.track-box,.order-card,
+.empty-state,.stat-box,.user-item,.order-clean-item,.payment-card,.category-block,.service-row,
+.settings-group,.wallet-repair-row,.support-conversation,.support-ticket-item,.support-shortcut {
+  background: var(--v5-surface) !important; color: var(--v5-text) !important;
+  border: 1px solid var(--v5-border) !important; box-shadow: var(--v5-shadow) !important;
+}
+.auth-card,.login-card { border-radius: 26px !important; }
+.auth-title,.login-title,.card-title,.section-title,.header-title,.admin-header h3,
+.history-content strong,.history-amount strong,.form-label,.service-name,.order-id,
+.support-ticket-top b,.support-conversation-head b { color: var(--v5-text) !important; }
+.auth-sub,.login-sub,.history-content small,.history-amount small,.service-desc,
+.order-date-text,.support-ticket-item small,.support-ticket-item time,
+.support-ticket-preview,.support-conversation-head small,.support-empty { color: var(--v5-muted) !important; }
+#auth-screen,.login-container { background: linear-gradient(145deg,#f8faff 0%,#edf3fc 100%) !important; }
+.logo-css { background: linear-gradient(145deg,#2865f0,#174bc8) !important; outline-color: #2865f0 !important; }
+.admin-header,.nav-grid,.app-header,.top,.header,.nav-bar {
+  background: rgba(255,255,255,.97) !important; color: var(--v5-text) !important;
+  border-color: var(--v5-border) !important; box-shadow: 0 3px 14px rgba(25,48,86,.045) !important;
+}
+.nav-btn-modern { background: #f5f8fd !important; color: #40516a !important; border: 1px solid #dce5f0 !important; box-shadow: none !important; }
+.nav-btn-modern:hover,.nav-btn-modern.active { background: linear-gradient(135deg,#2865f0,#174bc8) !important; color: #fff !important; border-color: transparent !important; }
+.nav-item { color: #63728a !important; }
+.nav-item.active { color: var(--v5-blue) !important; }
+.logout-btn { background: #fff1f1 !important; color: #bd3030 !important; border: 1px solid #ffd6d6 !important; box-shadow: none !important; }
+.btn-white { background: #fff !important; color: var(--v5-blue) !important; border: 1px solid #cbdaf5 !important; }
+.dropdown-item { color: var(--v5-text) !important; }
+.dropdown-item:hover { background: var(--v5-blue-soft) !important; }
+.support-shortcut { background: linear-gradient(120deg,#f0f5ff,#fff) !important; color: var(--v5-text) !important; }
+.support-shortcut b { color: var(--v5-text) !important; }
+.support-shortcut small { color: var(--v5-muted) !important; }
+.bal-badge,.order-id,.order-service,.status-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #d6e3fb !important; }
+.order-id:hover,.status-btn:hover { background: var(--v5-blue) !important; color: #fff !important; }
+.order-link-wrap { background: #f5f8fd !important; border: 1px solid #e2e9f3 !important; }
+.order-link-text { color: #244a91 !important; overflow-wrap: anywhere !important; }
+.order-cost,.order-amount-badge { color: #1749c7 !important; }
+.status-badge { color: #34445b !important; }
+.empty-state p { color: var(--v5-muted) !important; }
+/* Wallet summary keeps a deliberate dark-blue accent panel, with white readable text. */
+.balance { background: linear-gradient(135deg,#172b50,#234a86) !important; color: #fff !important; border: 0 !important; }
+.balance *,.balance strong,.balance small { color: #fff !important; }
+/* Support inbox and conversation: distinct, readable sender bubbles. */
+.ticket,.support-ticket-item { background: #fff !important; color: var(--v5-text) !important; border-color: var(--v5-border) !important; }
+.ticket.active,.support-ticket-item.active { background: #edf4ff !important; border-color: #8fb2ff !important; }
+.ticket b,.support-ticket-item b { color: var(--v5-text) !important; }
+.ticket small,.support-ticket-item small,.support-ticket-item time { color: var(--v5-muted) !important; }
+.msg,.support-message { background: #eef3fa !important; color: #1b2b43 !important; border: 1px solid #dce5f0 !important; }
+.msg.admin,.support-message.from-admin { background: #245eea !important; color: #fff !important; border: 1px solid #245eea !important; }
+.msg.admin *,.support-message.from-admin * { color: #fff !important; }
+.msg small,.support-message small,.msg time,.support-message time { color: #62738d !important; }
+.msg.admin small,.msg.admin time,.support-message.from-admin small,.support-message.from-admin time { color: #e4edff !important; }
+.support-conversation { background: #fff !important; }
+.support-conversation-head { background: #f5f8fd !important; border-color: var(--v5-border) !important; }
+.support-conversation-head b { color: var(--v5-text) !important; }
+.support-conversation-head small { color: var(--v5-muted) !important; }
+.support-close-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #cbdaf5 !important; }
+.support-reply-row { background: #fff !important; border-color: var(--v5-border) !important; }
+.support-status { background: #eaf1ff !important; color: #244a91 !important; }
+.support-status.open,.tag { background: #fff4d9 !important; color: #8a5700 !important; }
+.support-status.closed,.tag.closed { background: #eef1f5 !important; color: #526174 !important; }
+.tag.replied { background: #e4f3ff !important; color: #155c91 !important; }
+.notice { background: #fff8e8 !important; color: #76520b !important; border: 1px solid #f3dfaa !important; }
+.chips button { background: #edf3ff !important; color: #244a91 !important; box-shadow: none !important; }
+.status { background: #fff4d9 !important; color: #805600 !important; }
+.u-bal { background: #edf3ff !important; color: #244a91 !important; }
+.u-edit { background: #edf3ff !important; color: #244a91 !important; }
+.wallet-repair-row b,.wallet-repair-row small { color: var(--v5-text) !important; }
+.wallet-repair-row small { color: var(--v5-muted) !important; }
+.support-count { background: #e5edff !important; color: #1749c7 !important; }
+.swal2-popup { background: #fff !important; color: var(--v5-text) !important; }
+.swal2-title,.swal2-html-container { color: var(--v5-text) !important; }
+.swal2-input,.swal2-textarea { color: var(--v5-text) !important; }
+.copy-toast { background: #17243a !important; color: #fff !important; }
+.page-credit,.page-credit span { color: #718096 !important; }
+@media (max-width: 700px) {
+  .admin-header { padding: 13px 14px !important; }
+  .nav-grid { padding: 10px 12px !important; }
+  .nav-btn-modern { min-width: 0 !important; padding: 10px 11px !important; font-size: 12px !important; }
+  .wrap { padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Additional admin-specific contrast overrides for dynamic content */
+body .user-item h4, body .user-item p, body .stat-box h2, body .stat-box p,
+body .card h4, body .admin-header h3, body .support-ticket-preview,
+body .support-ticket-item small, body .support-ticket-item time,
+body .support-message p, body .support-empty { color: var(--v5-text) !important; }
+body .user-item p, body .stat-box p, body .support-ticket-item small,
+body .support-ticket-item time, body .support-empty { color: var(--v5-muted) !important; }
+body .support-message.from-admin p { color: #fff !important; }
+body .support-ticket-item.active .support-ticket-preview { color: #405a82 !important; }
+
+</style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="back-btn" onclick="window.location.href='index.html'">
+            <i class="fa-solid fa-arrow-left"></i>
+        </div>
+        <span class="header-title">My Orders</span>
+        <div class="header-right">
+            <i class="fa-regular fa-clock"></i> Recent
+        </div>
+    <a href="support.html" style="margin-left:auto;color:#a99dff;text-decoration:none;font-size:12px;font-weight:800">SUPPORT</a></header>
+
+    <!-- MAIN -->
+    <main class="content-area">
+        
+        <div class="track-box">
+            <h4><i class="fa-solid fa-magnifying-glass"></i> Track Order</h4>
+            <div class="search-group">
+                <input type="text" id="trackInput" placeholder="Enter Order ID">
+                <button class="track-btn" onclick="trackSingleOrder()">
+                    <i class="fa-solid fa-search"></i> Track
+                </button>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fa-regular fa-rectangle-list"></i>
+            <span>Order History</span>
+        </div>
+
+        <div id="fullOrderList">
+            <div class="empty-state">
+                <i class="fa-solid fa-spinner fa-pulse"></i>
+                <p>Loading your orders…</p>
+            </div>
+        </div>
+
+        <!-- tiny credit -->
+        <div class="page-credit">
+            <span>Vishalcodeverse</span>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div class="copy-toast" id="copyToast">✅ Copied</div>
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <script>
+     const firebaseConfig = {
+  apiKey: "AIzaSyDNMyLK7ETCYRxmFuuIWlGqZBMCi6-uM4s",
+  authDomain: "my-smm-pannel-56a68.firebaseapp.com",
+  databaseURL: "https://my-smm-pannel-56a68-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-smm-pannel-56a68",
+  storageBucket: "my-smm-pannel-56a68.firebasestorage.app",
+  messagingSenderId: "669926794608",
+  appId: "1:669926794608:web:b2e26d6b1f88339685dbb5"
+};
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let userOrders = [];
+        let allServices = {};
+
+        auth.onAuthStateChanged(user => {
+            if (user) { loadServices(); loadAllOrders(user.uid); }
+            else { window.location.href = 'index.html'; }
+        });
+
+        function loadServices() {
+            db.ref('site_config/services').once('value', snap => {
+                if (snap.exists()) {
+                    const data = snap.val();
+                    Object.keys(data).forEach(cat => {
+                        if (Array.isArray(data[cat])) {
+                            data[cat].forEach(svc => { if (svc.id) allServices[svc.id] = svc.name; });
+                        }
+                    });
+                }
+            });
+        }
+
+        function getServiceName(id) { return allServices[id] || id || 'Unknown'; }
+
+        function getStatusStyle(status) {
+            const s = (status || 'Pending').toLowerCase();
+            if (s.includes('complete') || s.includes('done') || s.includes('success')) return { bg: '#dcfce7', color: '#15803d', label: 'Successfully' };
+            if (s.includes('reject') || s.includes('cancel') || s.includes('fail')) return { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' };
+            if (s.includes('accept') || s.includes('process') || s.includes('progress')) return { bg: '#e8f0ff', color: '#1d4ed8', label: 'Processing' };
+            if (s.includes('pending admin')) return { bg: '#fef3c7', color: '#b45309', label: 'Waiting for Admin' };
+            return { bg: '#fef3c7', color: '#d97706', label: 'Pending' };
+        }
+
+        function copyToClipboard(text, msg = 'Copied') {
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(text).then(() => showCopyToast(msg)).catch(() => fallbackCopy(text, msg));
+            } else fallbackCopy(text, msg);
+        }
+        function fallbackCopy(text, msg) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); showCopyToast(msg); } catch (e) { alert('Copy manually: ' + text); }
+            document.body.removeChild(ta);
+        }
+        function showCopyToast(msg) {
+            const t = document.getElementById('copyToast');
+            t.textContent = ' ' + msg;
+            t.classList.add('show');
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => t.classList.remove('show'), 1800);
+        }
+        function copyOrderId(id) { copyToClipboard(id, 'Order ID copied'); }
+        function copyLink(link) { copyToClipboard(link, 'Link copied'); }
+
+        function loadAllOrders(uid) {
+            const list = document.getElementById('fullOrderList');
+            db.ref('orders/' + uid).limitToLast(50).on('value', snap => {
+                list.innerHTML = ''; userOrders = [];
+                if (!snap.exists()) {
+                    list.innerHTML = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i><p>No orders yet</p><p style="font-size:11px;margin-top:6px;color:#94a3b8;">Place your first order from the dashboard</p></div>`;
+                    return;
+                }
+                snap.forEach(c => { let v = c.val(); v.key = c.key; userOrders.push(v); });
+                userOrders.reverse().forEach(o => {
+                    const st = getStatusStyle(o.status);
+                    const sname = getServiceName(o.service);
+                    const oid = o.order_id || 'NA';
+                    const link = o.link || 'No link provided';
+                    list.innerHTML += `
+                        <div class="order-card">
+                            <div class="card-header">
+                                <span class="order-id" onclick="copyOrderId('${oid}')" title="Copy Order ID">
+                                    #${oid} <i class="fa-regular fa-copy copy-icon"></i>
+                                </span>
+                                <span class="status-badge" style="background:${st.bg};color:${st.color};">${st.label}</span>
+                            </div>
+                            <div class="order-service"><i class="fa-regular fa-layer-group" style="margin-right:4px;"></i>${sname}</div>
+                            <div class="order-link-wrap">
+                                <span class="order-link-text"><i class="fa-solid fa-link" style="margin-right:6px;color:#94a3b8;"></i>${link.length > 60 ? link.slice(0,57)+'…' : link}</span>
+                                ${link !== 'No link provided' ? `<button class="copy-link-btn" onclick="copyLink('${link}')"><i class="fa-regular fa-copy"></i></button>` : ''}
+                            </div>
+                            <div class="order-footer">
+                                <div class="order-cost">₹${parseFloat(o.cost).toFixed(2)}</div>
+                                <div class="order-actions">
+                                    <button class="status-btn" onclick="viewOrder('${o.key}')"><i class="fa-regular fa-eye"></i> View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function trackSingleOrder() {
+            const id = document.getElementById('trackInput').value;
+            if (!id) return Swal.fire({ icon: 'warning', title: 'Missing ID', text: 'Please enter an Order ID', confirmButtonColor: '#dc2626' });
+            const found = userOrders.find(o => o.order_id && o.order_id.toString().toLowerCase() === id.toLowerCase());
+            if (!found) return Swal.fire({ icon: 'error', title: 'Not Found', text: 'Order ID not found in your account', confirmButtonColor: '#dc2626' });
+
+            const st = getStatusStyle(found.status);
+            Swal.fire({
+                title: `Order #${found.order_id}`,
+                html: `
+                    <div style="text-align:left;margin-top:8px;">
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #edf2f7;"><span style="font-weight:500;color:#475569;">Service</span><span style="font-weight:600;">${getServiceName(found.service)}</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #edf2f7;"><span style="font-weight:500;color:#475569;">Status</span><span style="font-weight:700;color:${st.color};">${found.status || 'Pending'}</span></div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #edf2f7;"><span style="font-weight:500;color:#475569;">Amount</span><span style="font-weight:800;color:#dc2626;">₹${parseFloat(found.cost).toFixed(2)}</span></div>
+                        <div style="padding:6px 0;"><span style="font-weight:500;color:#475569;">Link</span><p style="font-size:11px;margin-top:4px;word-break:break-all;background:#f8fafc;padding:6px 10px;border-radius:10px;">${found.link}</p></div>
+                        ${found.date ? `<div style="padding:6px 0;border-top:1px solid #edf2f7;"><span style="font-weight:500;color:#475569;">Date</span><p style="font-size:11px;margin-top:2px;">${found.date}</p></div>` : ''}
+                        <div style="text-align:center;margin-top:10px;"><button class="btn" style="background:#dc2626;color:white;border:none;padding:6px 18px;border-radius:40px;font-size:12px;font-weight:700;cursor:pointer;" onclick="copyOrderId('${found.order_id}')"><i class="fa-regular fa-copy"></i> Copy Order ID</button></div>
+                    </div>
+                `,
+                confirmButtonText: 'Close',
+                confirmButtonColor: '#dc2626',
+                icon: 'info'
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function viewOrder(key) {
+            const found = userOrders.find(o => o.key === key);
+            if (!found) return;
+            const st = getStatusStyle(found.status);
+            Swal.fire({
+                title: `Order ${escapeHtml(found.order_id || key)}`,
+                html: `<div style="text-align:left;font-size:13px;line-height:1.8">
+                    <p><b>Service:</b> ${escapeHtml(getServiceName(found.service))}</p>
+                    <p><b>Status:</b> <span style="color:${st.color};font-weight:800">${escapeHtml(found.status || 'Pending Admin Approval')}</span></p>
+                    <p><b>Estimated amount:</b> ₹${Number(found.cost || 0).toFixed(2)}</p>
+                    <p><b>Payment:</b> ${escapeHtml(found.payment_status || 'Not charged')}</p>
+                    <p><b>Quantity:</b> ${escapeHtml(found.quantity)}</p>
+                    <p><b>Link:</b> ${escapeHtml(found.link)}</p>
+                    <p><b>Date:</b> ${escapeHtml(found.date || '')}</p>
+                    <p style="color:#64748b;margin-top:8px">Order is handled manually by the admin. Status updates appear here automatically.</p>
+                </div>`, confirmButtonText:'Close', confirmButtonColor:'#dc2626', icon:'info'
+            });
+        }
+
+        window.viewOrder = viewOrder;
+    </script>
+</body>
+</html>

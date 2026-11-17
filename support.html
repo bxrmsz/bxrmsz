@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Customer Support | BXRMSZ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top left,#17294a 0%,#0b1424 50%,#080f1b 100%);color:#edf2ff;font-family:Inter,system-ui,Arial,sans-serif}.top{height:66px;display:flex;align-items:center;gap:13px;padding:0 18px;border-bottom:1px solid #293b59;background:rgba(12,22,39,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:5}.top a{color:#dbe7ff;text-decoration:none;font-size:20px}.top b{font-size:16px}.top span{margin-left:auto;color:#a99dff;font-size:11px;font-weight:800;letter-spacing:1px}.wrap{max-width:960px;margin:22px auto;padding:0 14px 40px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:14px}.card{background:#121e33;border:1px solid #2a3a57;border-radius:20px;padding:17px;box-shadow:0 16px 42px rgba(0,0,0,.2)}h2{font-size:17px;margin:0 0 8px}.muted{font-size:12px;color:#aab6ce;line-height:1.55;margin:0 0 15px}label{display:block;font-size:11px;font-weight:800;color:#b8c5db;margin:12px 0 6px}input,textarea{width:100%;background:#0b1628;color:#edf2ff;border:1px solid #344663;border-radius:11px;padding:12px;font:inherit;font-size:13px;outline:none}textarea{resize:vertical;min-height:84px}.btn{border:0;border-radius:11px;background:linear-gradient(135deg,#7c6cff,#3f83ee);color:white;font-size:12px;font-weight:900;padding:13px 15px;cursor:pointer}.btn:disabled{opacity:.5}.full{width:100%;margin-top:12px}.tickets{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto}.ticket{width:100%;text-align:left;border:1px solid #2d405e;border-radius:13px;padding:12px;background:#0d1a2e;color:#edf2ff;cursor:pointer}.ticket.active{border-color:#8b7cff;background:#1a2542}.ticket b{display:block;font-size:12px}.ticket small{display:block;color:#9eacc4;font-size:10px;margin-top:5px}.tag{display:inline-block;margin-top:7px;font-size:9px;font-weight:900;padding:4px 7px;border-radius:20px;background:#3b2d14;color:#ffd88a}.tag.replied{background:#1c3651;color:#9fd7ff}.tag.closed{background:#273346;color:#a8b4c7}.chat{display:flex;flex-direction:column;min-height:430px}.chat-head{padding-bottom:12px;border-bottom:1px solid #2c3d5a}.messages{flex:1;min-height:260px;max-height:450px;overflow:auto;padding:14px 0;display:flex;flex-direction:column;gap:10px}.msg{max-width:88%;padding:10px 12px;border-radius:14px;background:#1a2a43;align-self:flex-start}.msg.admin{align-self:flex-end;background:#30305b;border:1px solid #5850a1}.msg small{display:block;color:#aebce0;font-size:9px;font-weight:900;margin-bottom:5px}.msg p{margin:0;font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.msg time{display:block;color:#aab6ce;font-size:9px;margin-top:6px}.sendrow{display:flex;gap:8px;align-items:stretch}.sendrow textarea{min-height:48px;max-height:110px;flex:1}.empty{padding:22px 10px;text-align:center;color:#9eacc4;font-size:12px;line-height:1.5}.notice{padding:11px;border-radius:11px;background:#1b2a43;color:#b9c9e2;font-size:11px;line-height:1.5;margin-top:12px}@media(max-width:700px){.wrap{grid-template-columns:1fr}.tickets{max-height:230px}.chat{min-height:390px}}
+</style>
+<!-- BXRMSZ V5: premium light high-contrast theme -->
+<style id="bxrmsz-v5-high-contrast-theme">
+/* BXRMSZ V5 — Premium Light / High Contrast Theme */
+:root {
+  color-scheme: light;
+  --v5-bg: #f4f7fc;
+  --v5-surface: #ffffff;
+  --v5-surface-soft: #f8faff;
+  --v5-text: #17243a;
+  --v5-muted: #596a82;
+  --v5-border: #dce5f0;
+  --v5-blue: #245eea;
+  --v5-blue-dark: #1749c7;
+  --v5-blue-soft: #eaf1ff;
+  --v5-shadow: 0 10px 30px rgba(25, 48, 86, .07);
+}
+html { background: var(--v5-bg) !important; color-scheme: light !important; }
+body { background: var(--v5-bg) !important; color: var(--v5-text) !important; }
+body, body * { text-shadow: none !important; }
+h1,h2,h3,h4,h5,h6,p,li,label,strong,b,th,td { color: var(--v5-text); }
+a { color: var(--v5-blue); }
+small,.muted,.auth-sub,.login-sub,.section-subtitle,.help-text,.hint { color: var(--v5-muted) !important; }
+input,select,textarea,.login-input,.form-inp,.search-input,.profile-name-input,.swal2-input,.swal2-textarea {
+  background: #fff !important; color: #17243a !important; border: 1px solid #cbd7e6 !important;
+  caret-color: var(--v5-blue) !important;
+}
+input::placeholder,textarea::placeholder { color: #77869b !important; opacity: 1 !important; }
+input:focus,select:focus,textarea:focus { outline: none !important; border-color: var(--v5-blue) !important; box-shadow: 0 0 0 3px rgba(36,94,234,.13) !important; }
+button,.btn,.btn-save,.login-btn,.btn-order,.btn-main,.track-btn,.primary {
+  color: #fff !important; background: linear-gradient(135deg,#2865f0,#174bc8) !important;
+  border-color: transparent !important; box-shadow: 0 6px 16px rgba(36,94,234,.16) !important;
+}
+button:disabled { opacity: .55 !important; }
+.auth-card,.login-card,.card,.gradient-card,.history-card,.price-card,.service-card,.content-card,
+.profile-modal-container,.dropdown-menu,.dropdown-sheet,.menu-panel,.track-box,.order-card,
+.empty-state,.stat-box,.user-item,.order-clean-item,.payment-card,.category-block,.service-row,
+.settings-group,.wallet-repair-row,.support-conversation,.support-ticket-item,.support-shortcut {
+  background: var(--v5-surface) !important; color: var(--v5-text) !important;
+  border: 1px solid var(--v5-border) !important; box-shadow: var(--v5-shadow) !important;
+}
+.auth-card,.login-card { border-radius: 26px !important; }
+.auth-title,.login-title,.card-title,.section-title,.header-title,.admin-header h3,
+.history-content strong,.history-amount strong,.form-label,.service-name,.order-id,
+.support-ticket-top b,.support-conversation-head b { color: var(--v5-text) !important; }
+.auth-sub,.login-sub,.history-content small,.history-amount small,.service-desc,
+.order-date-text,.support-ticket-item small,.support-ticket-item time,
+.support-ticket-preview,.support-conversation-head small,.support-empty { color: var(--v5-muted) !important; }
+#auth-screen,.login-container { background: linear-gradient(145deg,#f8faff 0%,#edf3fc 100%) !important; }
+.logo-css { background: linear-gradient(145deg,#2865f0,#174bc8) !important; outline-color: #2865f0 !important; }
+.admin-header,.nav-grid,.app-header,.top,.header,.nav-bar {
+  background: rgba(255,255,255,.97) !important; color: var(--v5-text) !important;
+  border-color: var(--v5-border) !important; box-shadow: 0 3px 14px rgba(25,48,86,.045) !important;
+}
+.nav-btn-modern { background: #f5f8fd !important; color: #40516a !important; border: 1px solid #dce5f0 !important; box-shadow: none !important; }
+.nav-btn-modern:hover,.nav-btn-modern.active { background: linear-gradient(135deg,#2865f0,#174bc8) !important; color: #fff !important; border-color: transparent !important; }
+.nav-item { color: #63728a !important; }
+.nav-item.active { color: var(--v5-blue) !important; }
+.logout-btn { background: #fff1f1 !important; color: #bd3030 !important; border: 1px solid #ffd6d6 !important; box-shadow: none !important; }
+.btn-white { background: #fff !important; color: var(--v5-blue) !important; border: 1px solid #cbdaf5 !important; }
+.dropdown-item { color: var(--v5-text) !important; }
+.dropdown-item:hover { background: var(--v5-blue-soft) !important; }
+.support-shortcut { background: linear-gradient(120deg,#f0f5ff,#fff) !important; color: var(--v5-text) !important; }
+.support-shortcut b { color: var(--v5-text) !important; }
+.support-shortcut small { color: var(--v5-muted) !important; }
+.bal-badge,.order-id,.order-service,.status-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #d6e3fb !important; }
+.order-id:hover,.status-btn:hover { background: var(--v5-blue) !important; color: #fff !important; }
+.order-link-wrap { background: #f5f8fd !important; border: 1px solid #e2e9f3 !important; }
+.order-link-text { color: #244a91 !important; overflow-wrap: anywhere !important; }
+.order-cost,.order-amount-badge { color: #1749c7 !important; }
+.status-badge { color: #34445b !important; }
+.empty-state p { color: var(--v5-muted) !important; }
+/* Wallet summary keeps a deliberate dark-blue accent panel, with white readable text. */
+.balance { background: linear-gradient(135deg,#172b50,#234a86) !important; color: #fff !important; border: 0 !important; }
+.balance *,.balance strong,.balance small { color: #fff !important; }
+/* Support inbox and conversation: distinct, readable sender bubbles. */
+.ticket,.support-ticket-item { background: #fff !important; color: var(--v5-text) !important; border-color: var(--v5-border) !important; }
+.ticket.active,.support-ticket-item.active { background: #edf4ff !important; border-color: #8fb2ff !important; }
+.ticket b,.support-ticket-item b { color: var(--v5-text) !important; }
+.ticket small,.support-ticket-item small,.support-ticket-item time { color: var(--v5-muted) !important; }
+.msg,.support-message { background: #eef3fa !important; color: #1b2b43 !important; border: 1px solid #dce5f0 !important; }
+.msg.admin,.support-message.from-admin { background: #245eea !important; color: #fff !important; border: 1px solid #245eea !important; }
+.msg.admin *,.support-message.from-admin * { color: #fff !important; }
+.msg small,.support-message small,.msg time,.support-message time { color: #62738d !important; }
+.msg.admin small,.msg.admin time,.support-message.from-admin small,.support-message.from-admin time { color: #e4edff !important; }
+.support-conversation { background: #fff !important; }
+.support-conversation-head { background: #f5f8fd !important; border-color: var(--v5-border) !important; }
+.support-conversation-head b { color: var(--v5-text) !important; }
+.support-conversation-head small { color: var(--v5-muted) !important; }
+.support-close-btn { background: #edf3ff !important; color: #244a91 !important; border-color: #cbdaf5 !important; }
+.support-reply-row { background: #fff !important; border-color: var(--v5-border) !important; }
+.support-status { background: #eaf1ff !important; color: #244a91 !important; }
+.support-status.open,.tag { background: #fff4d9 !important; color: #8a5700 !important; }
+.support-status.closed,.tag.closed { background: #eef1f5 !important; color: #526174 !important; }
+.tag.replied { background: #e4f3ff !important; color: #155c91 !important; }
+.notice { background: #fff8e8 !important; color: #76520b !important; border: 1px solid #f3dfaa !important; }
+.chips button { background: #edf3ff !important; color: #244a91 !important; box-shadow: none !important; }
+.status { background: #fff4d9 !important; color: #805600 !important; }
+.u-bal { background: #edf3ff !important; color: #244a91 !important; }
+.u-edit { background: #edf3ff !important; color: #244a91 !important; }
+.wallet-repair-row b,.wallet-repair-row small { color: var(--v5-text) !important; }
+.wallet-repair-row small { color: var(--v5-muted) !important; }
+.support-count { background: #e5edff !important; color: #1749c7 !important; }
+.swal2-popup { background: #fff !important; color: var(--v5-text) !important; }
+.swal2-title,.swal2-html-container { color: var(--v5-text) !important; }
+.swal2-input,.swal2-textarea { color: var(--v5-text) !important; }
+.copy-toast { background: #17243a !important; color: #fff !important; }
+.page-credit,.page-credit span { color: #718096 !important; }
+@media (max-width: 700px) {
+  .admin-header { padding: 13px 14px !important; }
+  .nav-grid { padding: 10px 12px !important; }
+  .nav-btn-modern { min-width: 0 !important; padding: 10px 11px !important; font-size: 12px !important; }
+  .wrap { padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* Additional admin-specific contrast overrides for dynamic content */
+body .user-item h4, body .user-item p, body .stat-box h2, body .stat-box p,
+body .card h4, body .admin-header h3, body .support-ticket-preview,
+body .support-ticket-item small, body .support-ticket-item time,
+body .support-message p, body .support-empty { color: var(--v5-text) !important; }
+body .user-item p, body .stat-box p, body .support-ticket-item small,
+body .support-ticket-item time, body .support-empty { color: var(--v5-muted) !important; }
+body .support-message.from-admin p { color: #fff !important; }
+body .support-ticket-item.active .support-ticket-preview { color: #405a82 !important; }
+
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html" aria-label="Back to shop"><i class="fa-solid fa-arrow-left"></i></a><b>BXRMSZ Support</b><span>LIVE ADMIN CHAT</span></header>
+<main class="wrap">
+<section class="card"><h2><i class="fa-solid fa-message" style="color:#a99dff"></i> Raise a complaint</h2><p class="muted">Tell us what happened. Your message will appear in the admin panel, and you can continue the conversation here.</p><label for="subject">SUBJECT</label><input id="subject" maxlength="80" placeholder="e.g. Order issue / Payment issue"><label for="firstMessage">YOUR MESSAGE</label><textarea id="firstMessage" maxlength="2000" placeholder="Explain your issue... "></textarea><button class="btn full" id="createTicketBtn" onclick="createTicket()"><i class="fa-solid fa-paper-plane"></i> SEND TO ADMIN</button><div class="notice">Do not share your password, OTP, UPI PIN or other private credentials in support messages.</div><h2 style="margin-top:22px">Your conversations</h2><div id="ticketList" class="tickets"><div class="empty">Loading your conversations...</div></div></section>
+<section class="card chat"><div class="chat-head"><h2 id="chatTitle">Select a conversation</h2><p class="muted" id="chatSubtitle">Choose a ticket from the left, or raise a new complaint.</p></div><div id="messages" class="messages"><div class="empty">Your conversation will appear here.</div></div><div class="sendrow"><textarea id="replyText" maxlength="2000" placeholder="Write a message to admin..." disabled></textarea><button class="btn" id="sendReplyBtn" onclick="sendReply()" disabled><i class="fa-solid fa-paper-plane"></i></button></div></section>
+</main>
+<script src="firebase.js"></script>
+<script>
+let currentUser=null, currentProfile={}, tickets=[], selectedTicket=null, activeMessagesRef=null;
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+auth.onAuthStateChanged(async user=>{if(!user){location.href='index.html';return;}currentUser=user;try{const s=await db.ref('users/'+user.uid).once('value');currentProfile=s.val()||{};}catch(e){};listenTickets();});
+function listenTickets(){db.ref('support_tickets/'+currentUser.uid).on('value',snap=>{tickets=[];if(snap.exists())snap.forEach(c=>tickets.push({key:c.key,...(c.val()||{})}));tickets.sort((a,b)=>Number(b.lastMessageAt||b.createdAt||0)-Number(a.lastMessageAt||a.createdAt||0));renderTickets();if(selectedTicket){const found=tickets.find(t=>t.key===selectedTicket.key);if(found)openTicket(found.key,false);}} ,e=>{document.getElementById('ticketList').innerHTML='<div class="empty">Could not load conversations: '+esc(e.message||e.code)+'</div>';});}
+function renderTickets(){const box=document.getElementById('ticketList');if(!tickets.length){box.innerHTML='<div class="empty">No conversations yet. Use the form above to contact admin.</div>';return;}box.innerHTML=tickets.map(t=>`<button class="ticket ${selectedTicket&&selectedTicket.key===t.key?'active':''}" onclick="openTicket('${esc(t.key)}')"><b>${esc(t.subject||'Support request')}</b><small>${t.lastMessageAt?new Date(Number(t.lastMessageAt)).toLocaleString():'New request'}</small><span class="tag ${esc(t.status||'open')}">${esc(String(t.status||'open').toUpperCase())}</span></button>`).join('');}
+async function createTicket(){const subject=document.getElementById('subject').value.trim();const text=document.getElementById('firstMessage').value.trim();if(!subject||!text)return Swal.fire('Add details','Enter a subject and explain your issue.','warning');const btn=document.getElementById('createTicketBtn');btn.disabled=true;try{const ref=db.ref('support_tickets/'+currentUser.uid).push();await ref.set({uid:currentUser.uid,email:currentUser.email||'',username:currentProfile.username||currentUser.displayName||'Customer',subject,status:'open',createdAt:firebase.database.ServerValue.TIMESTAMP,lastMessageAt:firebase.database.ServerValue.TIMESTAMP,lastMessagePreview:text.slice(0,140)});const msgRef=db.ref(`support_messages/${currentUser.uid}/${ref.key}`).push();await msgRef.set({sender:'customer',text,senderEmail:currentUser.email||'',createdAt:firebase.database.ServerValue.TIMESTAMP});document.getElementById('subject').value='';document.getElementById('firstMessage').value='';const createdSnap=await ref.once('value');tickets=[{key:ref.key,...(createdSnap.val()||{})},...tickets.filter(t=>t.key!==ref.key)];openTicket(ref.key);Swal.fire({toast:true,position:'top',icon:'success',title:'Message sent to admin',showConfirmButton:false,timer:1800});}catch(e){Swal.fire('Could not send',e.message||'Please check Firebase database rules.', 'error');}finally{btn.disabled=false;}}
+function openTicket(key,render=true){const t=tickets.find(x=>x.key===key);if(!t)return;selectedTicket=t;if(render)renderTickets();document.getElementById('chatTitle').textContent=t.subject||'Support conversation';document.getElementById('chatSubtitle').textContent=(t.status||'open').toUpperCase()+' · Admin replies will appear here';const canReply=t.status!=='closed';document.getElementById('replyText').disabled=!canReply;document.getElementById('sendReplyBtn').disabled=!canReply;if(activeMessagesRef)activeMessagesRef.off('value');activeMessagesRef=db.ref(`support_messages/${currentUser.uid}/${key}`);activeMessagesRef.on('value',snap=>{const rows=[];if(snap.exists())snap.forEach(c=>rows.push(c.val()||{}));rows.sort((a,b)=>Number(a.createdAt||0)-Number(b.createdAt||0));const box=document.getElementById('messages');box.innerHTML=rows.length?rows.map(m=>`<div class="msg ${m.sender==='admin'?'admin':''}"><small>${m.sender==='admin'?'ADMIN':'YOU'}</small><p>${esc(m.text||'')}</p><time>${m.createdAt?new Date(Number(m.createdAt)).toLocaleString():''}</time></div>`).join(''):'<div class="empty">No messages yet.</div>';box.scrollTop=box.scrollHeight;},e=>{document.getElementById('messages').textContent='Could not load messages: '+e.message;});}
+async function sendReply(){if(!selectedTicket||selectedTicket.status==='closed')return;const input=document.getElementById('replyText');const text=input.value.trim();if(!text)return;const key=selectedTicket.key;try{const ref=db.ref(`support_messages/${currentUser.uid}/${key}`).push();await ref.set({sender:'customer',text,senderEmail:currentUser.email||'',createdAt:firebase.database.ServerValue.TIMESTAMP});await db.ref(`support_tickets/${currentUser.uid}/${key}`).update({status:'open',lastMessageAt:firebase.database.ServerValue.TIMESTAMP,lastMessagePreview:text.slice(0,140)});input.value='';}catch(e){Swal.fire('Message not sent',e.message||'Please try again.','error');}}
+</script></body></html>

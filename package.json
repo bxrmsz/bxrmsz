@@ -1,0 +1,9 @@
+{
+  "name": "bxrmsz-manual-shop",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Manual order processing, automatic wallet debit, manual deposits and live support chat",
+  "dependencies": {
+    "firebase-admin": "^13.5.0"
+  }
+}
